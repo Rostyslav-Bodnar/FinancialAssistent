@@ -1,0 +1,41 @@
+﻿body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url("../Media/w13.png") center no-repeat;
+    background-size: cover;
+}
+
+.intro {
+    text-align: center;
+    margin-bottom: 200px;
+    margin-left: 550px;
+}
+
+.header {
+    margin-bottom: 20px;
+    color: white;
+    font-size: 50px;
+}
+
+.header-footer {
+    color: white;
+    font-size: 30px;
+}
+
+.getStartedButton {
+    padding: 15px 30px;
+    font-size: 20px;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .getStartedButton:hover {
+        background-color: #e65c00;
+    }

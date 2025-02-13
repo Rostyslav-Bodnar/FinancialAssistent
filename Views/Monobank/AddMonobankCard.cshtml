@@ -1,0 +1,45 @@
+﻿@model FinancialAssistent.Models.DashboardViewModel
+
+<head>
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/addCard.css" asp-append-version="true" />
+
+</head>
+<body>
+        <div class="intro">
+            <p class="header">You haven't added a Monobank card yet.</p>
+            <button class="getStartedButton" onclick="showForm()">Add Card</button>
+        </div>
+
+    <div id="overlay" class="overlay" onclick="closeForm()"></div>
+
+    <div id="tokenForm" class="tokenForm">
+        <button class="closeButton" onclick="closeForm()">×</button>
+        <h3 class="form-header">Add Monobank card</h3>
+
+        <div class="form-instructions">
+            <p>Go to the <a href="https://api.monobank.ua/" target="_blank" style="color: #FFD700;">Monobank API</a></p>
+            <p>Scan QR-code</p>
+            <p>Activate token</p>
+            <p>Copy token and paste it in the input field</p>
+        </div>
+
+        <form id="form" asp-action="AddMonobankCard" asp-controller="Monobank" method="post">
+            <input type="text" name="token" placeholder="Enter Monobank Token" required />
+            <button class="getStartedButton" type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function showForm() {
+            document.getElementById("tokenForm").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function closeForm() {
+            document.getElementById("tokenForm").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+
+    </script>
+</body>

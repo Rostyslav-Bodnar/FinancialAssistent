@@ -1,0 +1,90 @@
+﻿body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1c1f2b;
+}
+
+.tokenForm {
+    display: none; /* Спочатку прихована */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(28, 31, 43, 1);
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    width: 400px;
+    padding: 20px;
+    text-align: center;
+    z-index: 1000;
+}
+
+    .tokenForm input {
+        width: 80%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #444857;
+        border-radius: 5px;
+        background: #1c1f2b;
+        color: white;
+    }
+
+    .tokenForm button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+
+.overlay {
+    display: none; /* Спочатку прихований */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    align-self: end;
+}
+
+.form-header {
+    color: white;
+}
+
+.form-instructions {
+    text-align: left;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(44, 47, 60, 0.8);
+    border-radius: 5px;
+    color: #ddd;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+    .form-instructions p {
+        margin: 5px 0;
+        padding-left: 20px;
+        position: relative;
+    }
+
+        .form-instructions p::before {
+            content: "•"; /* Куля для пунктів */
+            color: #FFD700; /* Золотистий колір */
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }

@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<head>
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="intro">
+        <h1 class="header">CONTROL YOUR FINANCES</h1>
+        <h2 class="header-footer">Manage your cash with financial assistant</h2>
+        <button class="getStartedButton" onclick="window.location.href='@Url.Action("Auth", "Auth")';">
+            Get Started
+        </button>
+
+    </div>
+</body>
+

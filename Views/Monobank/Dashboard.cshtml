@@ -1,0 +1,121 @@
+﻿@model FinancialAssistent.Models.DashboardViewModel
+
+<head>
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/addCard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+
+</head>
+<body>
+    <div class="balance-info">
+        <div class="total-balance">
+            <p class="balance-header">Total balance:</p>
+            <p id="total-balance" class="balance">@Model.Balance ₴</p>
+            <div class="balance-details">
+                <div class="cash-balance">
+                    <p class="cash-balance-header">Cash:</p>
+                    <p id="inCash" class="cash">2578 ₴</p>
+                </div>
+                <div class="cash-balance">
+                    <p class="cash-balance-header">Bank card:</p>
+                    <p id="card-balance" class="cash">@Model.Balance ₴</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="widgets-container">
+        <button class="add-widget" onclick="openWidgetMenu()">Add Widget</button>
+        <div id="widgetsContainer" class="widgets"></div>
+    </div>
+
+    <div id="widgetMenu" class="widget-menu">
+        <button class="closeButton" onclick="closeWidgetMenu()">×</button>
+        <h3>Select Widget</h3>
+        <ul>
+            <li onclick="addWidget('balanceChart')">Balance Chart</li>
+            <li onclick="addWidget('expenseTable')">Expense Table</li>
+            <li onclick="addWidget('categoryBreakdown')">Category Breakdown</li>
+        </ul>
+    </div>
+
+    <script>
+        function getTotalBalance() {
+            let cash = document.getElementById("inCash").textContent.replace(" ₴", "").trim();
+            let card = document.getElementById("card-balance").textContent.replace(" ₴", "").trim();
+
+            let cashValue = parseFloat(cash) || 0;
+            let cardValue = parseFloat(card) || 0;
+
+            let total = cashValue + cardValue;
+
+            document.getElementById("total-balance").textContent = `${total} ₴`;
+        }
+        // Відкрити меню вибору віджета
+        function openWidgetMenu() {
+            document.getElementById("widgetMenu").style.display = "block";
+        }
+
+        // Закрити меню вибору віджета
+        function closeWidgetMenu() {
+            document.getElementById("widgetMenu").style.display = "none";
+        }
+
+        // Додавання віджета
+        function addWidget(type) {
+            const container = document.getElementById("widgetsContainer");
+
+            const widget = document.createElement("div");
+            widget.classList.add("widget");
+            widget.dataset.type = type;
+
+            switch (type) {
+                case "balanceChart":
+                    widget.innerHTML = `<h3>Balance Chart</h3><div id="chart${Date.now()}" class="chart"></div>`;
+                    break;
+                case "expenseTable":
+                    widget.innerHTML = `<h3>Expense Table</h3><p>List of recent expenses...</p>`;
+                    break;
+                case "categoryBreakdown":
+                    widget.innerHTML = `<h3>Category Breakdown</h3><p>Expenses by category...</p>`;
+                    break;
+                default:
+                    widget.innerHTML = `<h3>Unknown Widget</h3>`;
+            }
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.innerText = "×";
+            deleteBtn.classList.add("delete-widget");
+            deleteBtn.onclick = () => {
+                widget.remove();
+                saveWidgets();
+            };
+
+            widget.appendChild(deleteBtn);
+            container.appendChild(widget);
+            closeWidgetMenu();
+            saveWidgets();
+        }
+
+        // Збереження віджетів у LocalStorage
+        function saveWidgets() {
+            const widgets = Array.from(document.querySelectorAll(".widget")).map(w => w.dataset.type);
+            localStorage.setItem("widgets", JSON.stringify(widgets));
+        }
+
+        // Завантаження віджетів із LocalStorage
+        function loadWidgets() {
+            const widgets = JSON.parse(localStorage.getItem("widgets")) || [];
+            widgets.forEach(type => addWidget(type));
+        }
+
+        // Додавання Drag-and-Drop
+        new Sortable(document.getElementById("widgetsContainer"), {
+            animation: 150,
+            onEnd: saveWidgets
+        });
+
+        
+    </script>
+</body>
