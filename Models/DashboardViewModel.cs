@@ -9,7 +9,7 @@ namespace FinancialAssistent.Models
         public decimal? Balance { get; set; }
         public bool HasCard { get; set; }
         public List<TransactionEntity> Transactions { get; set; }
-        
+
         public decimal MonthBudget { get; set; }
     }
 }

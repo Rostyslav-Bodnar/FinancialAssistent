@@ -32,7 +32,7 @@
                 <button class="edit-monthBudget-button" onclick="openBudgetSlider()">
                     <span class="material-symbols-outlined">edit</span>
                 </button>
-            </div>
+             </div>
 
             <div class="monthly-budget-slider">
                 <p class="spent-header">You've spent</p>
@@ -144,7 +144,7 @@
             document.getElementById("btnDaily").addEventListener("click", function () {
                 if (!document.querySelector("#forecastChart-daily").innerHTML.trim()) {
                     loadChart("/api/BudgetForecast/weekly", "#forecastChart-daily");
-                }
+        }
                 document.getElementById("forecastChart-daily").style.display = "block";
                 document.getElementById("forecastChart-weekly").style.display = "none";
                 this.classList.add("active");
@@ -179,7 +179,7 @@
                                     legend: {
                                         position: 'bottom'
                                     }
-                                }
+        }
                             }]
                         };
 
@@ -187,9 +187,14 @@
                         chart.render();
                     })
                     .catch(error => console.error("Помилка при отриманні даних про витрати:", error));
-            }
+        }
 
             loadCategoryExpensesChart();
         });
+
+        // Виклик при завантаженні сторінки
+        window.onload = loadWidgets;
+        getTotalBalance();
+        
     </script>
 </body>
