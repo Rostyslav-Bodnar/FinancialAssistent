@@ -34,8 +34,10 @@ public class MonobankController : Controller
         {
             User = user,
             Balance = bankCard.Balance,
+            TotalBalance = bankCard.Balance + user.Cash,
             HasCard = true,
-            Transactions = bankCard.Transactions.OrderByDescending(t => t.Time).ToList()
+            Transactions = bankCard.Transactions.OrderByDescending(t => t.Time).ToList(),
+            MonthBudget = 0
         });
     }
 

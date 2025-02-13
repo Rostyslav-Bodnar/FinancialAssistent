@@ -1,6 +1,5 @@
 ﻿body {
 }
-
 .container {
     justify-content: center;
     align-items: center;
@@ -13,32 +12,27 @@
     margin-left: 300px;
     margin-top: 0px;
     display: flex;
-}
-
-.add-widget {
-    margin-left: 500px;
+    gap: 30px;
 }
 
 .widgets {
     display: flex;
-    justify-content: start;
-    align-items: start;
-    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
-    background: rgba(28, 31, 43, 0.95);
     width: 1200px;
     height: 400px;
     margin-left: 300px;
     margin-top: 20px;
     border-radius: 20px;
+    gap: 30px;
 }
-    .total-balance {
-        box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
-        background: rgba(28, 31, 43, 0.95);
-        border-radius: 10px;
-        width: 300px;
-        height: 200px;
-        margin-top: 50px;
-    }
+.widget {
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+    background: rgba(28, 31, 43, 0.95);
+    border-radius: 10px;
+    width: 300px;
+    height: 200px;
+    margin-top: 50px;
+}
+
         .balance-header {
             color: white;
             font-size: 20px;
@@ -85,48 +79,100 @@
                 margin: 0px 0px 0px 5px;
             }
 
-.widgets-container {
-    margin: 20px;
+#monthlyBudget {
+    align-self: end;
+    height: 150px;
+    width: 400px;
 }
 
-.widget {
-    background: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: relative;
-    margin: 10px 0;
-    cursor: grab;
+.top-part {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
 }
-
-.delete-widget {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    background: red;
-    color: white;
+.edit-monthBudget-button {
+    background: none;
+    height: 40px;
+    margin-top: 2px;
     border: none;
-    cursor: pointer;
+    justify-self: end;
+    align-self: end;
+    margin-left: 10px;
 }
 
-.widget-menu {
-    display: none;
-    background: #fff;
-    padding: 10px;
-    position: absolute;
-    top: 50%;
+    .edit-monthBudget-button span {
+        color: white;
+    }
+
+.spent-header {
+    color: white;
+    margin: 0px;
+    margin-left: 10px;
+}
+.spent-value {
+    font-size: 20px;
+    color: green;
+    margin: 0px;
+    margin-left: 10px;
+}
+.left-value {
+    color: white;
+    margin: 0px;
+    justify-self: end;
+    margin-right: 5px;
+}
+
+.progress-bar-container {
+    width: 95%;
+    height: 2px;
+    background-color: #e0e0e0;
+    border-radius: 0px;
+    overflow: hidden;
+    margin: 5px 5px 5px 5px;
+    justify-self: center;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #4CAF50;
+    transition: width 0.5s ease-in-out;
+}
+
+
+.slider-panel {
+    position: fixed;
+    bottom: 10%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transform: translateX(-50%);
+    background: rgba(28, 31, 43, 0.95);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+    text-align: center;
 }
 
-    .widget-menu ul {
-        list-style: none;
-        padding: 0;
-    }
+#forecastWidget {
+    width: 400px;
+    height: 300px;
+    margin: 0;
+}
 
-    .widget-menu li {
-        padding: 5px;
-        cursor: pointer;
-    }
+.top-widget-panel {
+    display: flex;
+}
+
+#btnWeekly {
+    background: rgba(19, 22, 44, 1);
+    color: white;
+    margin-left: 100px;
+    margin-top: 5px;
+    height: 30px;
+}
+
+#btnDaily {
+    background: rgba(19, 22, 44, 1);
+    color: white;
+    margin-top: 5px;
+    height: 30px;
+}

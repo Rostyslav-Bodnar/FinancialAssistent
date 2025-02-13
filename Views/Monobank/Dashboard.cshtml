@@ -4,40 +4,72 @@
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/addCard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/categoryExpences.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=edit" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 
 </head>
 <body>
     <div class="balance-info">
-        <div class="total-balance">
+        <div class="widget">
             <p class="balance-header">Total balance:</p>
-            <p id="total-balance" class="balance">@Model.Balance ₴</p>
+            <p id="total-balance" class="balance">₴@Model.TotalBalance</p>
             <div class="balance-details">
                 <div class="cash-balance">
                     <p class="cash-balance-header">Cash:</p>
-                    <p id="inCash" class="cash">2578 ₴</p>
+                    <p id="inCash" class="cash">₴@Model.User.Cash</p>
                 </div>
                 <div class="cash-balance">
                     <p class="cash-balance-header">Bank card:</p>
-                    <p id="card-balance" class="cash">@Model.Balance ₴</p>
+                    <p id="card-balance" class="cash">₴@Model.Balance</p>
                 </div>
             </div>
         </div>
+        <div class="widget" id="monthlyBudget">
+            <div class="top-part">
+                <p class="balance-header">Month Budget: <span id="monthlyBudgetValue">@Model.MonthBudget ₴</span></p>
+                <button class="edit-monthBudget-button" onclick="openBudgetSlider()">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+            </div>
+
+            <div class="monthly-budget-slider">
+                <p class="spent-header">You've spent</p>
+                <p class="spent-value" id="spentValue">₴1 000</p>
+
+                <!-- Прогрес-бар -->
+                <div class="progress-bar-container">
+                    <div id="budgetProgressBar" class="progress-bar"></div>
+                </div>
+
+                <p class="left-value" id="leftValue">You've ₴500 left</p>
+            </div>
+        </div>
+
     </div>
     <div class="widgets-container">
-        <button class="add-widget" onclick="openWidgetMenu()">Add Widget</button>
-        <div id="widgetsContainer" class="widgets"></div>
+        <div id="widgetsContainer" class="widgets">
+            <div class="widget" id="forecastWidget">
+                <div class="top-widget-panel">
+                    <p class="balance-header">Budget Forecast</p>
+                    <button id="btnWeekly" class="active">W</button>
+                    <button id="btnDaily">D</button>
+                </div>
+                <div id="forecastChart-weekly"></div>
+                <div id="forecastChart-daily" style="display: none;"></div>
+            </div>
+            <div id="categoryExpensesChart" class="widget">
+                <p class="balance-header">Category Expences</p>
+            </div>
+        </div>
     </div>
-
-    <div id="widgetMenu" class="widget-menu">
-        <button class="closeButton" onclick="closeWidgetMenu()">×</button>
-        <h3>Select Widget</h3>
-        <ul>
-            <li onclick="addWidget('balanceChart')">Balance Chart</li>
-            <li onclick="addWidget('expenseTable')">Expense Table</li>
-            <li onclick="addWidget('categoryBreakdown')">Category Breakdown</li>
-        </ul>
+    <div id="budgetSliderPanel" class="slider-panel" style="display: none;">
+        <h3>Select month budget</h3>
+        <input type="range" id="budgetSlider" min="0" max="@Model.Balance" value="@Model.MonthBudget" oninput="updateBudget(this.value)">
+        <p>Вибраний бюджет: <span id="budgetValue">@Model.MonthBudget ₴</span></p>
+        <button onclick="saveBudget()">Save</button>
+        <button onclick="closeBudgetSlider()">Cancel</button>
     </div>
 
     <script>
@@ -52,70 +84,112 @@
 
             document.getElementById("total-balance").textContent = `${total} ₴`;
         }
-        // Відкрити меню вибору віджета
-        function openWidgetMenu() {
-            document.getElementById("widgetMenu").style.display = "block";
+
+        function openBudgetSlider() {
+            document.getElementById("budgetSliderPanel").style.display = "block";
         }
 
-        // Закрити меню вибору віджета
-        function closeWidgetMenu() {
-            document.getElementById("widgetMenu").style.display = "none";
+        function closeBudgetSlider() {
+            document.getElementById("budgetSliderPanel").style.display = "none";
         }
 
-        // Додавання віджета
-        function addWidget(type) {
-            const container = document.getElementById("widgetsContainer");
+        function updateBudget(value) {
+            document.getElementById("budgetValue").textContent = value + " ₴";
+        }
 
-            const widget = document.createElement("div");
-            widget.classList.add("widget");
-            widget.dataset.type = type;
+        function saveBudget() {
+            let budget = document.getElementById("budgetSlider").value;
+            localStorage.setItem("monthlyBudget", budget);
+            document.getElementById("monthlyBudgetValue").textContent = budget + " ₴";
+            closeBudgetSlider();
+        }
 
-            switch (type) {
-                case "balanceChart":
-                    widget.innerHTML = `<h3>Balance Chart</h3><div id="chart${Date.now()}" class="chart"></div>`;
-                    break;
-                case "expenseTable":
-                    widget.innerHTML = `<h3>Expense Table</h3><p>List of recent expenses...</p>`;
-                    break;
-                case "categoryBreakdown":
-                    widget.innerHTML = `<h3>Category Breakdown</h3><p>Expenses by category...</p>`;
-                    break;
-                default:
-                    widget.innerHTML = `<h3>Unknown Widget</h3>`;
+        // Завантаження збереженого бюджету
+        window.onload = function () {
+            let savedBudget = localStorage.getItem("monthlyBudget") || 0;
+            document.getElementById("monthlyBudgetValue").textContent = savedBudget + " ₴";
+        };
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function loadChart(endpoint, chartId) {
+                fetch(endpoint)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Отримані дані:", data);
+
+                        var options = {
+                            series: [{ name: "Balance", data: data.values }],
+                            chart: { type: 'area' },
+                            xaxis: { categories: data.labels },
+                            colors: ['#FF5733'],
+                            stroke: { curve: 'smooth' }
+                        };
+
+                        var chart = new ApexCharts(document.querySelector(chartId), options);
+                        chart.render();
+                    })
+                    .catch(error => console.error("Error fetching forecast data:", error));
             }
 
-            const deleteBtn = document.createElement("button");
-            deleteBtn.innerText = "×";
-            deleteBtn.classList.add("delete-widget");
-            deleteBtn.onclick = () => {
-                widget.remove();
-                saveWidgets();
-            };
+            loadChart("/api/BudgetForecast/monthly", "#forecastChart-weekly");
 
-            widget.appendChild(deleteBtn);
-            container.appendChild(widget);
-            closeWidgetMenu();
-            saveWidgets();
-        }
+            document.getElementById("btnWeekly").addEventListener("click", function () {
+                document.getElementById("forecastChart-weekly").style.display = "block";
+                document.getElementById("forecastChart-daily").style.display = "none";
+                this.classList.add("active");
+                document.getElementById("btnDaily").classList.remove("active");
+            });
 
-        // Збереження віджетів у LocalStorage
-        function saveWidgets() {
-            const widgets = Array.from(document.querySelectorAll(".widget")).map(w => w.dataset.type);
-            localStorage.setItem("widgets", JSON.stringify(widgets));
-        }
-
-        // Завантаження віджетів із LocalStorage
-        function loadWidgets() {
-            const widgets = JSON.parse(localStorage.getItem("widgets")) || [];
-            widgets.forEach(type => addWidget(type));
-        }
-
-        // Додавання Drag-and-Drop
-        new Sortable(document.getElementById("widgetsContainer"), {
-            animation: 150,
-            onEnd: saveWidgets
+            document.getElementById("btnDaily").addEventListener("click", function () {
+                if (!document.querySelector("#forecastChart-daily").innerHTML.trim()) {
+                    loadChart("/api/BudgetForecast/weekly", "#forecastChart-daily");
+                }
+                document.getElementById("forecastChart-daily").style.display = "block";
+                document.getElementById("forecastChart-weekly").style.display = "none";
+                this.classList.add("active");
+                document.getElementById("btnWeekly").classList.remove("active");
+            });
         });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function loadCategoryExpensesChart() {
+                fetch("/api/CategoryExpences/category")
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Отримані дані про категорії витрат:", data);
 
-        
+                        var options = {
+                            series: data.values,
+                            chart: {
+                                type: 'donut'
+                            },
+                            labels: data.labels,
+                            colors: ['#FF5733', '#FFA533', '#FFD733', '#A3FF33', '#33FF57', '#33FFF5', '#337AFF'],
+                            legend: {
+                                show: false // Вимикаємо легенду
+                            },
+                            responsive: [{
+                                breakpoint: 480,
+                                options: {
+                                    chart: {
+                                        width: 300
+                                    },
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }]
+                        };
+
+                        var chart = new ApexCharts(document.querySelector("#categoryExpensesChart"), options);
+                        chart.render();
+                    })
+                    .catch(error => console.error("Помилка при отриманні даних про витрати:", error));
+            }
+
+            loadCategoryExpensesChart();
+        });
     </script>
 </body>

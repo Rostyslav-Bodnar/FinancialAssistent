@@ -4,6 +4,6 @@ namespace FinancialAssistent.Entities
 {
     public class User : IdentityUser
     {
-        public string? Token { get; set; }
+        public decimal Cash {  get; set; }
     }
 }
