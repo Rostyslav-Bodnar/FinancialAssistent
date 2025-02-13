@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FinancialAssistent</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FinancialAssistent.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="layout-top">
+            <div class="layout-top-container">
+                <a class="header-button" asp-area="" asp-controller="Home" asp-action="Index">FinancialAssistent</a>
+            </div>
+            <div class="loginInfo">
+                @if (Context.Session.GetString("Username") != null)
+                {
+                    <p>Вітаємо, @Context.Session.GetString("Username")!</p>
+                    <a href="/Auth/Logout">Вийти</a>
+                }
+                else
+                {
+                    <a href="/Auth/Login">Увійти</a>
+                }
+            </div>
+        </nav>
+    </header>
+    <div class="left-menu">
+        <nav class="layoutMenu">
+            <div class="layoutMenu-container">
+                <div class="menu-options">
+                    <ul class="menu-list">
+                        <li class="option">
+                            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="option">
+                            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top footter text-muted">
+                <div class="container">
+                    &copy; 2025 - FinancialAssistent - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

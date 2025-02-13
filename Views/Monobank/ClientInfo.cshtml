@@ -1,0 +1,38 @@
+﻿@model List<dynamic>
+
+@{
+    ViewData["Title"] = "Інформація про клієнта";
+}
+
+<h2>Усі транзакції</h2>
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="card p-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Час</th>
+                    <th>Опис</th>
+                    <th>Сума</th>
+                    <th>Баланс</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr>
+                        <td>@DateTimeOffset.FromUnixTimeSeconds((long)t.time).DateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@t.description</td>
+                        <td>@(t.amount / 100) UAH</td>
+                        <td>@(t.balance / 100) UAH</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p>Транзакцій не знайдено.</p>
+}

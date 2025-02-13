@@ -1,0 +1,109 @@
+html, body {
+    margin: 0;
+    background-color: #00026E; /* Темно-синій фон сайту */
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #1c1f2b; /* Темно-сірий */
+    color: #d0d3db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 2px 5px rgba(255, 255, 255, 0.2);
+    z-index: 1000;
+}
+
+.footter {
+    width: 285px;
+    position: absolute;
+    bottom: 0;
+    white-space: nowrap;
+    line-height: 60px;
+    color: #d0d3db;
+}
+
+.left-menu {
+    position: fixed;
+    top: 60px; /* Відступ після хедера */
+    left: 0;
+    width: 300px;
+    height: calc(100vh - 60px); /* Вся висота мінус хедер */
+    background-color: #1c1f2b;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0px 5px rgba(255, 255, 255, 0.2);
+}
+
+.layoutMenu {
+    width: 300px;
+    height: 100%;
+    justify-content: center;
+    height: 100vh; /* Вся висота вікна перегляду */
+}
+
+.layoutMenu-container {
+    width: 100%;
+    height: 100%;
+}
+
+.header-button {
+    text-decoration: none;
+    color: #ffffff; /* Чисто білий для контрасту */
+    font-size: 30px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.menu-options {
+    border-top: 1px solid #444857; /* Темно-сірий роздільник */
+    width: 100%;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0px;
+}
+
+.option {
+    text-decoration: none;
+    font-size: 25px;
+    color: #d0d3db; /* Світло-сірий */
+    padding: 12px 0;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+    .option:hover {
+        background-color: #258cfb; /* Світло-блакитний */
+        color: white;
+    }
+
+    .option a {
+        text-decoration: none;
+        color: inherit;
+        margin-left: 40px;
+    }
+
+.layout-top {
+    display: flex;
+    width: 100%;
+    justify-content: space-between; /* Розміщує контент на максимум ширини */
+    align-items: center;
+    padding: 0 20px;
+}
+
+.loginInfo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px; /* Відступи між елементами */
+}

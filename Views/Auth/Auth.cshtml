@@ -1,0 +1,63 @@
+﻿@model FinancialAssistent.Models.AuthViewModel
+
+@{
+    ViewData["Title"] = "Authorization";
+}
+<head>
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container">
+        <div class="auth-box">
+            <div class="auth-btns">
+                <div id="btn-hover" class="btn-hover"></div>
+                <button id="login-btn" class="toggle-btn" onclick="login()">Login</button>
+                <button id="register-btn" class="toggle-btn" onclick="register()">Register</button>
+            </div>
+            <div class="forms">
+                <form id="login-form" asp-action="Login" asp-controller="Auth" method="post" class="login">
+                    <input asp-for="loginModel.Username" class="input-field" placeholder="Enter Username" required />
+                    <input asp-for="loginModel.Password" class="input-field" type="password" placeholder="Enter password" required />
+                    <span asp-validation-for="loginModel.Username" class="text-danger"></span>
+                    <span asp-validation-for="loginModel.Password" class="text-danger"></span>
+                    <button type="submit" class="submit-btn">Log in</button>
+                </form>
+                <form id="register-form" asp-action="Register" asp-controller="Auth" method="post" class="register">
+                    <input asp-for="registerModel.Name" class="input-field" placeholder="Enter Name" required />
+                    <input asp-for="registerModel.Email" class="input-field" placeholder="Enter E-mail" required />
+                    <input asp-for="registerModel.Password" class="input-field" type="password" placeholder="Enter password" required />
+                    <input asp-for="registerModel.ConfirmPassword" class="input-field" type="password" placeholder="Confirm password" required />
+                    <span asp-validation-for="registerModel.Name" class="text-danger"></span>
+                    <span asp-validation-for="registerModel.Email" class="text-danger"></span>
+                    <span asp-validation-for="registerModel.Password" class="text-danger"></span>
+                    <span asp-validation-for="registerModel.ConfirmPassword" class="text-danger"></span>
+                    <button type="submit" class="submit-btn">Register</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function register() {
+            let loginForm = document.getElementById("login-form");
+            let registerForm = document.getElementById("register-form");
+            let btn = document.getElementById("btn-hover");
+
+            loginForm.style.transform = "translateX(-120%)";
+            registerForm.style.transform = "translateX(-110%)";
+            btn.style.left = "170px";
+        }
+
+        function login() {
+            let loginForm = document.getElementById("login-form");
+            let registerForm = document.getElementById("register-form");
+            let btn = document.getElementById("btn-hover");
+
+            loginForm.style.transform = "translateX(0)";
+            registerForm.style.transform = "translateX(0)";
+            btn.style.left = "40px";
+        }
+
+    </script>
+</body>
