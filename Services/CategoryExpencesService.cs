@@ -1,6 +1,4 @@
-﻿using FinancialAssistent.Entities;
-using FinancialAssistent.Validators;
-using Microsoft.AspNetCore.Identity;
+﻿using FinancialAssistent.Converters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialAssistent.Services
@@ -9,16 +7,11 @@ namespace FinancialAssistent.Services
     [ApiController]
     public class CategoryExpencesService
     {
-        private readonly Database _context;
-        private readonly UserManager<User> userManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly TransactionService transactionService;
 
-        public CategoryExpencesService(Database context, UserManager<User> userManager, 
-            IHttpContextAccessor httpContextAccessor)
+        public CategoryExpencesService(TransactionService transactionService)
         {
-            _context = context;
-            this.userManager = userManager;
-            _httpContextAccessor = httpContextAccessor;
+            this.transactionService = transactionService;
         }
 
 
@@ -28,14 +21,14 @@ namespace FinancialAssistent.Services
             DateTime today = DateTime.UtcNow;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
 
-            var transactions = GetTransactions(today, firstDayOfMonth);
+            var transactions = transactionService.GetTransactions(firstDayOfMonth, today);
 
             List<string> labels = new List<string>();
             List<decimal> values = new List<decimal>();
 
             foreach (var transaction in transactions)
             {
-                labels.Add(TransactionCategoryValidator.GetCategory(transaction.Mcc));
+                labels.Add(TransactionCategoryConverter.GetCategory(transaction.Mcc));
                 values.Add(-transaction.Amount);
             }
 
@@ -46,21 +39,6 @@ namespace FinancialAssistent.Services
             };
 
             return new JsonResult(result);
-        }
-
-        private List<TransactionEntity> GetTransactions(DateTime today, DateTime start)
-        {
-            var user = _httpContextAccessor.HttpContext?.User;
-            var userId = userManager.GetUserId(user);
-            var bankCard = _context.BankCards.FirstOrDefault(c => c.UserId == userId);
-
-            var transactions = _context.Transactions
-                .AsEnumerable()
-                .Where(t => DateTimeOffset.FromUnixTimeSeconds(t.Time).UtcDateTime >= start &&
-                            DateTimeOffset.FromUnixTimeSeconds(t.Time).UtcDateTime <= today
-                            && t.BankCardId == bankCard.Id)
-                .ToList();
-            return transactions;
         }
     }
 }

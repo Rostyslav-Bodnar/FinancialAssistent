@@ -1,0 +1,384 @@
+﻿#categoryExpensesChart {
+    width: 400px;
+    height: 400px;
+    margin-top: 0px;
+    color: white;
+}
+
+#costsLimits {
+    align-self: end;
+    height: 150px;
+    width: 400px;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+}
+
+.top-part {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.top-monthlyBudget-part {
+    display: flex;
+    width: 100%;
+}
+
+#monthlyBudget {
+    align-self: end;
+    width: 400px;
+    position: relative;
+}
+
+.spent-header {
+    color: white;
+    margin: 0px;
+    margin-left: 10px;
+}
+
+.spent-value {
+    font-size: 20px;
+    color: green;
+    margin: 0px;
+    margin-left: 10px;
+}
+
+.left-value {
+    color: white;
+    margin: 0px;
+    justify-self: end;
+    margin-right: 5px;
+}
+
+.progress-bar-container {
+    width: 95%;
+    height: 2px;
+    background-color: #485271FF;
+    border-radius: 0px;
+    border: none;
+    overflow: hidden;
+    margin: 5px 0px 5px 0px;
+    padding: 0px 5px 0px 5px;
+    justify-self: center;
+    justify-content: start;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.5s ease-in-out;
+}
+
+#btnWeeklyLimit {
+    position: absolute;
+    top: 5px;
+    right: 35px;
+    background: rgba(19, 22, 44, 1);
+    color: white;
+    height: 30px;
+    width: 30px;
+    border: none;
+    cursor: pointer;
+    z-index: 10; /* Впевненість, що кнопки залишаються зверху */
+}
+
+#btnDailyLimit {
+    position: absolute;
+    top: 5px;
+    right: 65px;
+    background: rgba(19, 22, 44, 1);
+    color: white;
+    height: 30px;
+    width: 30px;
+    border: none;
+    cursor: pointer;
+    z-index: 10; /* Впевненість, що кнопки залишаються зверху */
+}
+
+.edit-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+}
+
+    .edit-btn span {
+        color: white;
+    }
+
+
+.limits-container {
+    display: flex;
+    width: 200%; /* Вміщує два div */
+    transition: transform 0.5s ease-in-out;
+}
+
+.daily-limits, .weekly-limits {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+
+.circleBar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.circleBar-panel {
+    display: flex;
+    gap: 20px;
+    justify-content: start;
+}
+
+.wrapper {
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.outer {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 9px;
+    box-shadow: -1px -1px 2px 0 rgb(8, 8, 8), 1px 1px 3px white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inner {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: inset -1px -1px 5px 0px rgb(8, 8, 8), 1px 1px 3px white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress-ring {
+    position: absolute;
+}
+
+.bg-circle {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 4;
+}
+
+.progress-circle {
+    fill: none;
+    stroke: yellow;
+    stroke-width: 4;
+    stroke-dasharray: 132;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease-in-out;
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+#circleIcon {
+    position: absolute;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.remaining-cash {
+    margin-top: 5px; /* Додаємо відступ */
+    color: white;
+    font-size: 14px;
+    margin-bottom: 0px;
+}
+
+#topPartOfSlider {
+    display: flex;
+    margin-top: 25px;
+    justify-content: space-between; /* Розтягуємо елементи вліво і вправо */
+    align-items: center; /* Вирівнюємо по вертикалі */
+    width: 100%; /* Робимо ширину 100% */
+}
+
+#topPartOfMonthlyBudgetSlider {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between; /* Розтягуємо елементи вліво і вправо */
+    align-items: center; /* Вирівнюємо по вертикалі */
+    width: 100%; /* Робимо ширину 100% */
+}
+
+.spent-monthBudget-value {
+    color: white;
+    margin: 0px;
+    justify-self: end;
+    margin-right: 5px;
+    font-size: 20px;
+}
+
+.left-monthBudget-value {
+    font-size: 20px;
+    color: green;
+    margin: 0px;
+    margin-left: 10px;
+    align-self: end;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+.settings {
+    position: fixed;
+    left: 50%;
+    top: 15%;
+    transform: translate(-50%, 0);
+    width: 400px;
+    background: rgba(28, 31, 43, 0.98);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    z-index: 999;
+}
+
+.popup-form-header {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #ff6600;
+}
+
+.inputField, .widgetInput {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    background: #1c1f2b;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+}
+
+    .inputField:focus, .widgetInput:focus {
+        border-color: #ff6600;
+    }
+
+.widgetName {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    background: #1c1f2b;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+}
+/* Фіксований контейнер для віджетів */
+.widget-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+    max-height: 300px; /* Обмеження висоти контейнера */
+    overflow-y: auto; /* Додає прокрутку, якщо віджетів багато */
+    padding-right: 5px;
+}
+
+    /* Стилізація прокрутки */
+    .widget-settings::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .widget-settings::-webkit-scrollbar-thumb {
+        background-color: #ff6600;
+        border-radius: 6px;
+    }
+
+    .widget-settings::-webkit-scrollbar-track {
+        background: #1c1f2b;
+    }
+
+.widget-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #222533;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+}
+
+    .widget-info:hover {
+        background: #2b2f42;
+    }
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.material-symbols-outlined {
+    font-size: 24px;
+    color: #ff6600;
+}
+
+.monthly-budget-btn {
+    width: 100%;
+    padding: 10px;
+    background: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 15px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+    .monthly-budget-btn:hover {
+        background: #e65c00;
+        transform: scale(1.05);
+    }
+
+    .monthly-budget-btn:active {
+        background: #cc5200;
+        transform: scale(0.98);
+    }
+
+.set-icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: none;
+    padding: 0px;
+}

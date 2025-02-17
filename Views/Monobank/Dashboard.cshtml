@@ -4,8 +4,8 @@
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/addCard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/categoryExpences.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=edit" />
+    <link rel="stylesheet" href="~/css/widgets.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 
@@ -18,7 +18,7 @@
             <div class="balance-details">
                 <div class="cash-balance">
                     <p class="cash-balance-header">Cash:</p>
-                    <p id="inCash" class="cash">₴@Model.User.Cash</p>
+                    <p id="inCash" class="cash">₴@Model.User.UserInfo.Cash</p>
                 </div>
                 <div class="cash-balance">
                     <p class="cash-balance-header">Bank card:</p>
@@ -26,27 +26,92 @@
                 </div>
             </div>
         </div>
-        <div class="widget" id="monthlyBudget">
-            <div class="top-part">
-                <p class="balance-header">Month Budget: <span id="monthlyBudgetValue">@Model.MonthBudget ₴</span></p>
-                <button class="edit-monthBudget-button" onclick="openBudgetSlider()">
-                    <span class="material-symbols-outlined">edit</span>
-                </button>
-             </div>
+        <div id="costsLimits" class="widget">
+            <button id="btnDailyLimit" onclick="getDailyLimit()"><</button>
+            <button id="btnWeeklyLimit" onclick="getWeeklyLimit()">></button>
+            <button class="edit-btn" id="edit-Limit-button" onclick="openLimitsSettings()">
+                <span class="material-symbols-outlined">edit</span>
+            </button>
+            <div class="limits-container">
+                <div class="daily-limits" id="dailyLimit">
+                    <div class="top-part">
+                        <p class="balance-header">Daily Limit: <span id="dailyLimitValue">₴@Model.costLimitsModel.DailyLimit</span></p>
+                    </div>
+                    <div class="limit-slider">
+                        <p class="spent-header">You've spent</p>
+                        <p class="spent-value" id="spentValue">₴@Model.costLimitsModel.DailySpent</p>
 
-            <div class="monthly-budget-slider">
-                <p class="spent-header">You've spent</p>
-                <p class="spent-value" id="spentValue">₴1 000</p>
+                        <div class="progress-bar-container">
+                            <div id="budgetProgressBar" class="progress-bar" style="width: @(Math.Round((Model.costLimitsModel.DailyLimit - Model.costLimitsModel.DailySpent) * 100 / Model.costLimitsModel.DailyLimit, 0))%"></div>
+                        </div>
 
-                <!-- Прогрес-бар -->
-                <div class="progress-bar-container">
-                    <div id="budgetProgressBar" class="progress-bar"></div>
+                        <p class="left-value" id="leftValue">You've ₴@(Model.costLimitsModel.DailyLimit - Model.costLimitsModel.DailySpent) left</p>
+                    </div>
                 </div>
+                <div class="weekly-limits" id="weeklyLimit">
+                    <div class="top-part">
+                        <p class="balance-header">Weekly Limit: <span id="dailyLimitValue">₴@Model.costLimitsModel.WeeklyLimit</span></p>
+                    </div>
+                    <div class="limit-slider">
+                        <p class="spent-header">You've spent</p>
+                        <p class="spent-value" id="spentValue">₴@Model.costLimitsModel.WeeklySpent</p>
 
-                <p class="left-value" id="leftValue">You've ₴500 left</p>
+                        <div class="progress-bar-container">
+                            <div id="budgetProgressBar" class="progress-bar" style="width: @(Math.Round((Model.costLimitsModel.WeeklyLimit - Model.costLimitsModel.WeeklySpent) * 100 / Model.costLimitsModel.WeeklyLimit, 0))%"></div>
+                        </div>
+
+                        <p class="left-value" id="leftValue">You've ₴@(Model.costLimitsModel.WeeklyLimit - Model.costLimitsModel.WeeklySpent) left</p>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="widget" id="monthlyBudget">
+            <div class="top-monthlyBudget-part">
+                <p class="balance-header">Month Budget: <span id="monthlyBudgetValue">₴@Model.monthlyBudgetModel.MonthlyBudget</span></p>
+                <button class="edit-btn" id="edit-monthBudget-button" onclick="openMonthlyBudgetSetting()">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+            </div>
+            <div class="limit-slider">
+                <div id="topPartOfMonthlyBudgetSlider">
+                    <p class="left-monthBudget-value" id="leftMonthBudgetValue">You've ₴@Model.monthlyBudgetModel.RemainingBudget left</p>
+                    <p class="spent-monthBudget-value" id="spentMonthBudgetValue">₴@Model.monthlyBudgetModel.SpendedBudget</p>
+                </div>
 
+                <div class="progress-bar-container">
+                    <div id="budgetProgressBar" class="progress-bar" style="width: @(Math.Round((Model.monthlyBudgetModel.RemainingBudget) * 100 / Model.monthlyBudgetModel.MonthlyBudget, 0))%"></div>
+                </div>
+            </div>
+            <div class="circleBar-container">
+                <div class="circleBar-panel">
+                    @foreach(var widget in Model.widgets)
+                    {
+                        <div class="wrapper">
+                            <div class="outer">
+                                <div class="inner">
+                                    <svg class="progress-ring" width="50" height="50">
+                                        <circle class="bg-circle" cx="25" cy="25" r="21"></circle>
+                                        <circle class="progress-circle" cx="25" cy="25" r="21"
+                                                style="stroke-dashoffset: @(widget.Budget > 0
+                                                ? (widget.Expenses <= widget.Budget
+                                                    ? Math.Round(132 / widget.Budget * widget.Expenses, 0)
+                                                    : 132)
+                                                : 132)">
+                                        </circle>
+                                    </svg>
+                                    <span class="material-symbols-outlined" id="circleIcon">
+                                        @widget.Icon.Name
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="remaining-cash">₴@widget.Budget</p>
+                        </div>
+
+                    }
+                </div>
+            </div>
+
+        </div>
     </div>
     <div class="widgets-container">
         <div id="widgetsContainer" class="widgets">
@@ -62,53 +127,93 @@
             <div id="categoryExpensesChart" class="widget">
                 <p class="balance-header">Category Expences</p>
             </div>
+            <div id="w2" class="widget">
+                <h2>Список Цілей</h2>
+            </div>
+            <div id="w3" class="widget">
+                <h2>Фінансові поради від AI</h2>
+            </div>
         </div>
     </div>
-    <div id="budgetSliderPanel" class="slider-panel" style="display: none;">
-        <h3>Select month budget</h3>
-        <input type="range" id="budgetSlider" min="0" max="@Model.Balance" value="@Model.MonthBudget" oninput="updateBudget(this.value)">
-        <p>Вибраний бюджет: <span id="budgetValue">@Model.MonthBudget ₴</span></p>
-        <button onclick="saveBudget()">Save</button>
-        <button onclick="closeBudgetSlider()">Cancel</button>
-    </div>
+    <div id="overlay" class="overlay" onclick="closeMonthlyBudgetSetting()"></div>
+    <form class="settings" id="monthlyBudgetSettings" style="display:none">
+        <div id="budgetSettingsForm" class="popup-form">
+            <h3 class="popup-form-header">Select monthly budget</h3>
+            <input type="number" id="budgetInput" class="inputField" name="MonthlyBudget"
+                   min="0" max="@Model.TotalBalance" value="@Model.monthlyBudgetModel.MonthlyBudget" step="any">
+            <p>Unallocated Budget: <span id="unallocatedBudget">₴0</span></p>
+            <div class="widget-settings">
+                @foreach (var widget in Model.widgets)
+                {
+                    <div class="widget-info">
+                        <div class="wrapper">
+                            <div class="outer">
+                                <div class="inner">
+                                    <svg class="progress-ring" width="50" height="50">
+                                        <circle class="bg-circle" cx="25" cy="25" r="21"></circle>
+                                        <circle class="progress-circle" cx="25" cy="25" r="21" style="stroke-dashoffset: @(widget.Budget > 0
+                                                ? (widget.Expenses <= widget.Budget
+                                                    ? Math.Round(132 / widget.Budget * widget.Expenses, 0)
+                                                    : 132)
+                                                : 132)"></circle>
+                                    </svg>
+                                    <span class="material-symbols-outlined" id="circleIcon">@widget.Icon.Name</span>
+                                </div>
+                            </div>
+                        </div>
 
+                        <p class="widgetName widget-name">@widget.Name</p>
+                        <input type="number" class="widgetInput widget-budget" min="0" max="@((float)Model.TotalBalance)" value="@((float)widget.Budget)">
+                    </div>
+                }
+            </div>
+            <button type="submit" class="monthly-budget-btn" onclick="saveSettings()">Save</button>
+            <button type="button" class="monthly-budget-btn" onclick="closeMonthlyBudgetSetting()">Cancel</button>
+        </div>
+    </form>
+
+    <div id="limitOverlay" class="overlay" onclick="closeLimitsSettings()"></div>
+    <form id="limitsSettings" class="settings" style="display:none">
+        <div id="budgetSettingsForm" class="popup-form">
+            <h3 class="popup-form-header">Enter Daily/Weekly Expences Limits</h3>
+            <div class="limit-settings">
+                <p>Daily Limit</p>
+                <input type="number" id="budgetInput" class="inputField" name="DailyLimit"
+                       min="0" max="@Model.TotalBalance">
+            </div>
+            <div class="limit-settings">
+                <p>Weekly Limit</p>
+                <input type="number" id="budgetInput" class="inputField" name="WeeklyLimit"
+                       min="0" max="@Model.TotalBalance">
+            </div>
+            <button type="submit" class="monthly-budget-btn" onclick="">Save</button>
+            <button type="button" class="monthly-budget-btn" onclick="closeLimitsSettings()">Cancel</button>
+        </div>
+    </form>
     <script>
-        function getTotalBalance() {
-            let cash = document.getElementById("inCash").textContent.replace(" ₴", "").trim();
-            let card = document.getElementById("card-balance").textContent.replace(" ₴", "").trim();
 
-            let cashValue = parseFloat(cash) || 0;
-            let cardValue = parseFloat(card) || 0;
-
-            let total = cashValue + cardValue;
-
-            document.getElementById("total-balance").textContent = `${total} ₴`;
+        function openMonthlyBudgetSetting() {
+            document.getElementById("monthlyBudgetSettings").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
         }
 
-        function openBudgetSlider() {
-            document.getElementById("budgetSliderPanel").style.display = "block";
+        function closeMonthlyBudgetSetting() {
+            document.getElementById("monthlyBudgetSettings").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+
         }
 
-        function closeBudgetSlider() {
-            document.getElementById("budgetSliderPanel").style.display = "none";
+        function openLimitsSettings()
+        {
+            document.getElementById("limitsSettings").style.display = "block";
+            document.getElementById("limitOverlay").style.display = "block";
         }
 
-        function updateBudget(value) {
-            document.getElementById("budgetValue").textContent = value + " ₴";
+        function closeLimitsSettings() 
+        {
+            document.getElementById("limitsSettings").style.display = "none";
+            document.getElementById("limitOverlay").style.display = "none";
         }
-
-        function saveBudget() {
-            let budget = document.getElementById("budgetSlider").value;
-            localStorage.setItem("monthlyBudget", budget);
-            document.getElementById("monthlyBudgetValue").textContent = budget + " ₴";
-            closeBudgetSlider();
-        }
-
-        // Завантаження збереженого бюджету
-        window.onload = function () {
-            let savedBudget = localStorage.getItem("monthlyBudget") || 0;
-            document.getElementById("monthlyBudgetValue").textContent = savedBudget + " ₴";
-        };
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -151,8 +256,7 @@
                 document.getElementById("btnWeekly").classList.remove("active");
             });
         });
-    </script>
-    <script>
+
         document.addEventListener("DOMContentLoaded", function () {
             function loadCategoryExpensesChart() {
                 fetch("/api/CategoryExpences/category")
@@ -166,7 +270,12 @@
                                 type: 'donut'
                             },
                             labels: data.labels,
-                            colors: ['#FF5733', '#FFA533', '#FFD733', '#A3FF33', '#33FF57', '#33FFF5', '#337AFF'],
+                            theme: {
+                                monochrome: {
+                                    enabled: true,
+                                    color: "#4e4dab"
+                                }
+                            },
                             legend: {
                                 show: false // Вимикаємо легенду
                             },
@@ -179,7 +288,7 @@
                                     legend: {
                                         position: 'bottom'
                                     }
-        }
+                                }
                             }]
                         };
 
@@ -187,14 +296,186 @@
                         chart.render();
                     })
                     .catch(error => console.error("Помилка при отриманні даних про витрати:", error));
-        }
+            }
 
             loadCategoryExpensesChart();
         });
+    </script>
+    <script>
+        function getWeeklyLimit() {
+            let weeklyLimit = document.getElementById("weeklyLimit");
+            let dailyLimit = document.getElementById("dailyLimit");
 
-        // Виклик при завантаженні сторінки
-        window.onload = loadWidgets;
-        getTotalBalance();
-        
+            weeklyLimit.style.transform = "translateX(-113%)";
+            dailyLimit.style.transform = "translateX(-200%)";
+        }
+
+        function getDailyLimit() {
+            let weeklyLimit = document.getElementById("weeklyLimit");
+            let dailyLimit = document.getElementById("dailyLimit");
+
+            weeklyLimit.style.transform = "translateX(0)";
+            dailyLimit.style.transform = "translateX(0)";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let currentIndex = 0;
+            const limitsContainer = document.querySelector(".limits-container");
+            const totalItems = document.querySelectorAll(".limits-container > div").length;
+
+            function cycleLimits() {
+                currentIndex = (currentIndex + 1) % totalItems;
+                updateLimits();
+            }
+
+            function updateLimits() {
+                let offset = -currentIndex * 100;
+                limitsContainer.style.transform = `translateX(${offset}%)`;
+            }
+
+            setInterval(cycleLimits, 10000);
+        });
+    </script>
+    <script>
+
+        function parseNumber(value) {
+            let parsedValue = parseFloat(value.replace(",", "."));
+            return isNaN(parsedValue) ? 0 : parsedValue;
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const budgetInput = document.getElementById("budgetInput");
+            const unallocatedBudgetDisplay = document.getElementById("unallocatedBudget");
+            const widgetContainer = document.querySelector(".widget-settings");
+
+            function updateUnallocatedBudget() {
+                const monthlyBudget = parseNumber(budgetInput.value) || 0;
+                let totalWidgetBudget = 0;
+
+                document.querySelectorAll(".widget-budget").forEach(input => {
+                    totalWidgetBudget += parseNumber(input.value) || 0;
+                });
+
+                let unallocatedBudget = monthlyBudget - totalWidgetBudget;
+                unallocatedBudgetDisplay.textContent = `₴${Math.max(0, unallocatedBudget)}`;
+            }
+
+            budgetInput.addEventListener("blur", function () {
+                let val = parseNumber(this.value) || 0;
+                if (val < 0) {
+                    val = 0;
+                }
+                if (val > parseFloat(@Model.TotalBalance)) {
+                    val = @Model.TotalBalance;
+                }
+                this.value = val;
+                updateUnallocatedBudget();
+            });
+
+            widgetContainer.addEventListener("input", function (event) {
+                if (event.target.classList.contains("widget-budget")) {
+                    let totalBudget = 0;
+                    document.querySelectorAll(".widget-budget").forEach(input => {
+                        totalBudget += parseNumber(input.value) || 0;
+                    });
+
+                    const monthlyBudget = parseNumber(budgetInput.value) || 0;
+                    if (totalBudget > monthlyBudget) {
+                        event.target.value = Math.max(0, monthlyBudget - (totalBudget - parseNumber(event.target.value)));
+                    }
+                    updateUnallocatedBudget();
+                }
+            });
+
+            updateUnallocatedBudget();
+        });
+
+        async function saveSettings() {
+            const budgetInput = document.getElementById("budgetInput").value;
+            const widgetElements = document.querySelectorAll(".widget-info");
+
+            const userId = "90ad564b-f2a6-47d0-aad8-c85ba9bceb06";
+            let widgets = [];
+            widgetElements.forEach(widget => {
+                const name = widget.querySelector(".widget-name").textContent.trim();
+                const budget = parseNumber(widget.querySelector(".widget-budget").value) || 0;
+
+                if (name) {
+                    widgets.push({ name, budget, userId: userId });
+                }
+                console.log(name);
+
+            });
+            const requestData = {
+                monthlyBudget: parseNumber(budgetInput) || 0,
+                widgets: widgets
+            };
+            console.log("Request Data:", JSON.stringify(requestData.widgets, null, 2));
+
+            try {
+                // Оновлення місячного бюджету
+                let budgetResponse = await fetch("/api/MonthlyBudget/setBudget", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ MonthlyBudget: requestData.monthlyBudget })
+                });
+
+                if (!budgetResponse.ok) {
+                    console.log("Не вдалося оновити бюджет");
+                }
+
+                // Оновлення віджетів
+                let widgetResponse = await fetch("/api/WidgetService/updateWidgets", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestData.widgets)
+                });
+
+                if (!widgetResponse.ok) {
+                    let errorText = await widgetResponse.text();
+                    console.error("Не вдалося оновити віджети:", errorText);
+                }
+
+                alert("Дані успішно збережено!");
+            } catch (error) {
+                console.error("Помилка при збереженні:", error);
+
+                alert("Помилка при збереженні. Деталі: " + error.message);
+            }
+
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dailyInput = document.querySelector("input[name='DailyLimit']");
+            const weeklyInput = document.querySelector("input[name='WeeklyLimit']");
+
+            dailyInput.addEventListener("blur", function () {
+                let dailyValue = parseFloat(this.value) || 0;
+                if (dailyValue < 0) {
+                    dailyValue = 0;
+                }
+                if (dailyValue > parseFloat(@Model.TotalBalance)) {
+                    dailyValue = @Model.TotalBalance;
+                }
+                this.value = dailyValue;
+                weeklyInput.value = dailyValue * 7;
+            });
+
+            weeklyInput.addEventListener("blur", function () {
+                let weeklyValue = parseFloat(this.value) || 0;
+                if (weeklyValue < 0) {
+                    weeklyValue = 0;
+                }
+                if (weeklyValue > parseFloat(@Model.TotalBalance)) {
+                    weeklyValue = @Model.TotalBalance;
+                }
+                this.value = weeklyValue;
+                dailyInput.value = (weeklyValue / 7).toFixed(2);
+            });
+        });
+
+        function setLimits() { 
+
+        }
     </script>
 </body>

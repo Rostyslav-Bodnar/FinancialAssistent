@@ -34,7 +34,8 @@ builder.Services.AddHttpClient<MonobankService>(client =>
     client.BaseAddress = new Uri("https://api.monobank.ua/");
 });
 
-
+builder.Services.AddScoped<TransactionService>();
+builder.Services.AddScoped<WidgetService>();
 
 var app = builder.Build();
 

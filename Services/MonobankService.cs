@@ -63,7 +63,11 @@ namespace FinancialAssistent.Services
 
         public async Task UpdateCardInfo(string userId, string token)
         {
-            _httpClient.DefaultRequestHeaders.Add("X-Token", token);
+            if (!_httpClient.DefaultRequestHeaders.Contains("X-Token"))
+            {
+                _httpClient.DefaultRequestHeaders.Add("X-Token", token);
+            }
+
 
             // Отримання інформації про баланс
             var response = await _httpClient.GetAsync("https://api.monobank.ua/personal/client-info");
@@ -82,7 +86,7 @@ namespace FinancialAssistent.Services
             //long fromTime = DateTimeOffset.UtcNow.AddMonths(-1).ToUnixTimeSeconds();\
             long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); // Поточний час у UNIX
             long fromTime = currentTime - 2682000;
-            var transactionsResponse = await _httpClient.GetAsync($"https://api.monobank.ua/personal/statement/0/{fromTime}");
+            var transactionsResponse = await _httpClient.GetAsync($"https://api.monobank.ua/personal/statement/0/{fromTime}/{currentTime}");
             transactionsResponse.EnsureSuccessStatusCode();
             string transactionsJson = await transactionsResponse.Content.ReadAsStringAsync();
             var transactions = JsonConvert.DeserializeObject<List<TransactionEntity>>(transactionsJson);
@@ -113,7 +117,8 @@ namespace FinancialAssistent.Services
             {
                 to = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             }
-            var transactionsResponse = await _httpClient.GetAsync($"https://api.monobank.ua/personal/statement/0/{from}/{to}");
+            var transactionsResponse = await _httpClient.GetAsync($"https://api.monobank.ua/personal/statement/0/{from}");
+            Console.WriteLine(transactionsResponse.EnsureSuccessStatusCode().RequestMessage);
             transactionsResponse.EnsureSuccessStatusCode();
             string transactionsJson = await transactionsResponse.Content.ReadAsStringAsync();
             var transactions = JsonConvert.DeserializeObject<List<TransactionEntity>>(transactionsJson);

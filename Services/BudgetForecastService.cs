@@ -1,6 +1,4 @@
-﻿using FinancialAssistent.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialAssistent.Services
 {
@@ -8,27 +6,22 @@ namespace FinancialAssistent.Services
     [ApiController]
     public class BudgetForecastService
     {
-        private readonly Database _context;
-        private readonly UserManager<User> userManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly TransactionService _transactionService;
 
-        public BudgetForecastService(Database context, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
+        public BudgetForecastService(TransactionService transactionService)
         {
-            _context = context;
-            this.userManager = userManager;
-            _httpContextAccessor = httpContextAccessor;
+            _transactionService = transactionService;
         }
-
         [HttpGet("monthly")]
         public JsonResult PredictMonthlyBalance()
         {
             DateTime today = DateTime.UtcNow;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            
+            var transactions = _transactionService.GetTransactions(firstDayOfMonth, today);
 
-            var transactions = GetTransactions(today, firstDayOfMonth);
-
-            decimal totalBalance = GetTotalBalance();
+            decimal totalBalance = _transactionService.GetTotalBalance();
             totalBalance = 6000; // Тимчасово жорстко заданий баланс
 
             Dictionary<DateOnly, decimal> weeklyExpenses = new Dictionary<DateOnly, decimal>();
@@ -103,31 +96,6 @@ namespace FinancialAssistent.Services
             return weekStart;
         }
 
-        private decimal GetTotalBalance()
-        {
-            var user = _httpContextAccessor.HttpContext?.User;
-            var userId = userManager.GetUserId(user);
-            var bankCard = _context.BankCards.FirstOrDefault(c => c.UserId == userId);
-            decimal totalBalance = (bankCard?.Balance ?? 0) + (bankCard?.User?.Cash ?? 0);
-            
-            return totalBalance;
-        }
-
-        private List<TransactionEntity> GetTransactions(DateTime today, DateTime start)
-        {
-            var user = _httpContextAccessor.HttpContext?.User;
-            var userId = userManager.GetUserId(user);
-            var bankCard = _context.BankCards.FirstOrDefault(c => c.UserId == userId);
-
-            var transactions = _context.Transactions
-                .AsEnumerable()
-                .Where(t => DateTimeOffset.FromUnixTimeSeconds(t.Time).UtcDateTime >= start &&
-                            DateTimeOffset.FromUnixTimeSeconds(t.Time).UtcDateTime <= today
-                            && t.BankCardId == bankCard.Id)
-                .ToList();
-            return transactions;
-        }
-
         private List<DateOnly> GetWeekStartDates(DateTime firstDayOfMonth, DateTime lastDayOfMonth)
         {
             List<DateOnly> weekStartDates = new List<DateOnly>();
@@ -162,12 +130,9 @@ namespace FinancialAssistent.Services
             DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek); // Початок поточного тижня (неділя)
             DateTime endOfWeek = startOfWeek.AddDays(6);
 
-            var transactions = GetTransactions(today, startOfWeek);
+            var transactions = _transactionService.GetTransactions(startOfWeek, today);
 
-            var user = _httpContextAccessor.HttpContext?.User;
-            var userId = userManager.GetUserId(user);
-            var bankCard = _context.BankCards.FirstOrDefault(c => c.UserId == userId);
-            decimal totalBalance = (bankCard?.Balance ?? 0) + (bankCard?.User?.Cash ?? 0);
+            decimal totalBalance = _transactionService.GetTotalBalance();
             totalBalance = 6000; // Тимчасово жорстко заданий баланс
 
             Dictionary<DayOfWeek, decimal> dailyExpenses = new Dictionary<DayOfWeek, decimal>();

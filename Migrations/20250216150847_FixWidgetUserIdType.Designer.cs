@@ -4,6 +4,7 @@ using FinancialAssistent.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinancialAssistent.Migrations
 {
     [DbContext(typeof(Database))]
-    partial class DatabaseModelSnapshot : ModelSnapshot
+    [Migration("20250216150847_FixWidgetUserIdType")]
+    partial class FixWidgetUserIdType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,10 +48,10 @@ namespace FinancialAssistent.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BankCards", (string)null);
+                    b.ToTable("BankCards");
                 });
 
-            modelBuilder.Entity("FinancialAssistent.Entities.Icons", b =>
+            modelBuilder.Entity("FinancialAssistent.Entities.IconEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +65,7 @@ namespace FinancialAssistent.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Icons", (string)null);
+                    b.ToTable("Icons");
                 });
 
             modelBuilder.Entity("FinancialAssistent.Entities.TransactionEntity", b =>
@@ -129,7 +132,7 @@ namespace FinancialAssistent.Migrations
 
                     b.HasIndex("BankCardId");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("FinancialAssistent.Entities.User", b =>
@@ -139,6 +142,9 @@ namespace FinancialAssistent.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Cash")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -156,6 +162,9 @@ namespace FinancialAssistent.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal>("MonthlyBudget")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -197,39 +206,7 @@ namespace FinancialAssistent.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("FinancialAssistent.Entities.UserInfo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Cash")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DailyCostsLimits")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MonthlyBudget")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("WeeklyCostsLimits")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("UsersInfo", (string)null);
-                });
-
-            modelBuilder.Entity("FinancialAssistent.Entities.Widgets", b =>
+            modelBuilder.Entity("FinancialAssistent.Entities.WidgetEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -240,9 +217,6 @@ namespace FinancialAssistent.Migrations
                     b.Property<decimal>("Budget")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("Expenses")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("IconID")
                         .HasColumnType("int");
 
@@ -250,16 +224,17 @@ namespace FinancialAssistent.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserInfoId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("IconID");
 
-                    b.HasIndex("UserInfoId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Widgets", (string)null);
+                    b.ToTable("Widgets");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -417,34 +392,23 @@ namespace FinancialAssistent.Migrations
                     b.Navigation("BankCard");
                 });
 
-            modelBuilder.Entity("FinancialAssistent.Entities.UserInfo", b =>
+            modelBuilder.Entity("FinancialAssistent.Entities.WidgetEntity", b =>
                 {
-                    b.HasOne("FinancialAssistent.Entities.User", "User")
-                        .WithOne("UserInfo")
-                        .HasForeignKey("FinancialAssistent.Entities.UserInfo", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FinancialAssistent.Entities.Widgets", b =>
-                {
-                    b.HasOne("FinancialAssistent.Entities.Icons", "Icon")
+                    b.HasOne("FinancialAssistent.Entities.IconEntity", "Icon")
                         .WithMany()
                         .HasForeignKey("IconID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FinancialAssistent.Entities.UserInfo", "UserInfo")
+                    b.HasOne("FinancialAssistent.Entities.User", "User")
                         .WithMany("Widgets")
-                        .HasForeignKey("UserInfoId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Icon");
 
-                    b.Navigation("UserInfo");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -504,12 +468,6 @@ namespace FinancialAssistent.Migrations
                 });
 
             modelBuilder.Entity("FinancialAssistent.Entities.User", b =>
-                {
-                    b.Navigation("UserInfo")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("FinancialAssistent.Entities.UserInfo", b =>
                 {
                     b.Navigation("Widgets");
                 });

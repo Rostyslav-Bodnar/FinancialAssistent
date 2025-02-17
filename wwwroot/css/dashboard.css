@@ -10,14 +10,10 @@
 }
 
 .balance-info {
-    margin-left: 300px;
+    margin-left: 320px;
     margin-top: 0px;
     display: flex;
     gap: 30px;
-}
-
-.add-widget {
-    margin-left: 500px;
 }
 
 .widgets {
@@ -26,10 +22,11 @@
     align-items: start;
     width: 1200px;
     height: 400px;
-    margin-left: 300px;
+    margin-left: 320px;
     margin-top: 20px;
     border-radius: 20px;
     gap: 30px;
+    flex-wrap: wrap;
 }
 .widget {
         box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
@@ -86,79 +83,6 @@
                 margin: 0px 0px 0px 5px;
             }
 
-#monthlyBudget {
-    align-self: end;
-    height: 150px;
-    width: 400px;
-}
-
-.top-part {
-    display: flex;
-    width: 100%;
-    margin-bottom: 10px;
-}
-.edit-monthBudget-button {
-    background: none;
-    height: 40px;
-    margin-top: 2px;
-    border: none;
-    justify-self: end;
-    align-self: end;
-    margin-left: 10px;
-}
-
-    .edit-monthBudget-button span {
-    color: white;
-    }
-
-.spent-header {
-    color: white;
-    margin: 0px;
-    margin-left: 10px;
-}
-.spent-value {
-    font-size: 20px;
-    color: green;
-    margin: 0px;
-    margin-left: 10px;
-}
-.left-value {
-    color: white;
-    margin: 0px;
-    justify-self: end;
-    margin-right: 5px;
-}
-
-.progress-bar-container {
-    width: 95%;
-    height: 2px;
-    background-color: #e0e0e0;
-    border-radius: 0px;
-    overflow: hidden;
-    margin: 5px 5px 5px 5px;
-    justify-self: center;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0%;
-    background-color: #4CAF50;
-    transition: width 0.5s ease-in-out;
-}
-
-
-.slider-panel {
-    position: fixed;
-    bottom: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(28, 31, 43, 0.95);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
-    text-align: center;
-}
-
 #forecastWidget {
     width: 400px;
     height: 300px;
@@ -183,3 +107,17 @@
     margin-top: 5px;
     height: 30px;
     }
+
+#w2 {
+    height: 400px;
+    margin-top: 0px;
+}
+
+#w3 {
+    position: fixed;
+    align-self: end;
+    left: 330px;
+    height: 85px;
+    width: 400px;
+    margin-top: 20px;
+}

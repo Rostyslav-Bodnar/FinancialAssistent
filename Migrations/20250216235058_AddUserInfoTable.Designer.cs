@@ -4,6 +4,7 @@ using FinancialAssistent.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinancialAssistent.Migrations
 {
     [DbContext(typeof(Database))]
-    partial class DatabaseModelSnapshot : ModelSnapshot
+    [Migration("20250216235058_AddUserInfoTable")]
+    partial class AddUserInfoTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace FinancialAssistent.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BankCards", (string)null);
+                    b.ToTable("BankCards");
                 });
 
             modelBuilder.Entity("FinancialAssistent.Entities.Icons", b =>
@@ -62,7 +65,7 @@ namespace FinancialAssistent.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Icons", (string)null);
+                    b.ToTable("Icons");
                 });
 
             modelBuilder.Entity("FinancialAssistent.Entities.TransactionEntity", b =>
@@ -129,7 +132,7 @@ namespace FinancialAssistent.Migrations
 
                     b.HasIndex("BankCardId");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("FinancialAssistent.Entities.User", b =>
@@ -226,7 +229,7 @@ namespace FinancialAssistent.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UsersInfo", (string)null);
+                    b.ToTable("UsersInfo");
                 });
 
             modelBuilder.Entity("FinancialAssistent.Entities.Widgets", b =>
@@ -259,7 +262,7 @@ namespace FinancialAssistent.Migrations
 
                     b.HasIndex("UserInfoId");
 
-                    b.ToTable("Widgets", (string)null);
+                    b.ToTable("Widgets");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
