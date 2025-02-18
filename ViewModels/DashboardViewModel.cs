@@ -1,6 +1,7 @@
 ﻿using FinancialAssistent.Entities;
+using FinancialAssistent.Models;
 
-namespace FinancialAssistent.Models
+namespace FinancialAssistent.ViewModels
 {
     public class DashboardViewModel
     {

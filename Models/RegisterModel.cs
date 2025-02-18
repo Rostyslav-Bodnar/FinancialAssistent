@@ -2,7 +2,7 @@
 
 namespace FinancialAssistent.Models
 {
-    public class RegisterViewModel
+    public class RegisterModel
     {
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }

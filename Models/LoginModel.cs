@@ -2,7 +2,7 @@
 
 namespace FinancialAssistent.Models
 {
-    public class LoginViewModel
+    public class LoginModel
     {
         [Required]
         public string Username { get; set; }

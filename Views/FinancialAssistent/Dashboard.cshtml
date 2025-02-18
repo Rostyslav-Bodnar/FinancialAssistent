@@ -1,4 +1,4 @@
-﻿@model FinancialAssistent.Models.DashboardViewModel
+﻿@model FinancialAssistent.ViewModels.DashboardViewModel
 
 <head>
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
@@ -104,7 +104,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <p class="remaining-cash">₴@widget.Budget</p>
+                            <p class="remaining-cash">₴@(widget.Budget + widget.Expenses)</p>
                         </div>
 
                     }
@@ -140,7 +140,7 @@
         <div id="budgetSettingsForm" class="popup-form">
             <h3 class="popup-form-header">Select monthly budget</h3>
             <input type="number" id="budgetInput" class="inputField" name="MonthlyBudget"
-                   min="0" max="@Model.TotalBalance" value="@Model.monthlyBudgetModel.MonthlyBudget" step="any">
+                   min="0" max="@Model.TotalBalance" value="@(Model.monthlyBudgetModel.MonthlyBudget)" step="any">
             <p>Unallocated Budget: <span id="unallocatedBudget">₴0</span></p>
             <div class="widget-settings">
                 @foreach (var widget in Model.widgets)
@@ -358,14 +358,14 @@
                 let unallocatedBudget = monthlyBudget - totalWidgetBudget;
                 unallocatedBudgetDisplay.textContent = `₴${Math.max(0, unallocatedBudget)}`;
             }
-
+            let v = 10000;
             budgetInput.addEventListener("blur", function () {
                 let val = parseNumber(this.value) || 0;
                 if (val < 0) {
                     val = 0;
                 }
-                if (val > parseFloat(@Model.TotalBalance)) {
-                    val = @Model.TotalBalance;
+                if (val > v/*parseFloat(@Model.TotalBalance)*/) {
+                    val = v /*@Model.TotalBalance*/;
                 }
                 this.value = val;
                 updateUnallocatedBudget();
@@ -393,14 +393,13 @@
             const budgetInput = document.getElementById("budgetInput").value;
             const widgetElements = document.querySelectorAll(".widget-info");
 
-            const userId = "90ad564b-f2a6-47d0-aad8-c85ba9bceb06";
             let widgets = [];
             widgetElements.forEach(widget => {
                 const name = widget.querySelector(".widget-name").textContent.trim();
                 const budget = parseNumber(widget.querySelector(".widget-budget").value) || 0;
 
                 if (name) {
-                    widgets.push({ name, budget, userId: userId });
+                    widgets.push({ name, budget });
                 }
                 console.log(name);
 
@@ -411,36 +410,30 @@
             };
             console.log("Request Data:", JSON.stringify(requestData.widgets, null, 2));
 
-            try {
-                // Оновлення місячного бюджету
-                let budgetResponse = await fetch("/api/MonthlyBudget/setBudget", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ MonthlyBudget: requestData.monthlyBudget })
-                });
+            // Оновлення місячного бюджету
+            let budgetResponse = await fetch("/api/MonthlyBudget/setBudget", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ MonthlyBudget: requestData.monthlyBudget })
+            });
 
-                if (!budgetResponse.ok) {
-                    console.log("Не вдалося оновити бюджет");
-                }
-
-                // Оновлення віджетів
-                let widgetResponse = await fetch("/api/WidgetService/updateWidgets", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(requestData.widgets)
-                });
-
-                if (!widgetResponse.ok) {
-                    let errorText = await widgetResponse.text();
-                    console.error("Не вдалося оновити віджети:", errorText);
-                }
-
-                alert("Дані успішно збережено!");
-            } catch (error) {
-                console.error("Помилка при збереженні:", error);
-
-                alert("Помилка при збереженні. Деталі: " + error.message);
+            if (!budgetResponse.ok) {
+                console.log("Не вдалося оновити бюджет");
             }
+
+            // Оновлення віджетів
+            let widgetResponse = await fetch("/api/WidgetService/updateWidgets", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData.widgets)
+            });
+
+            if (!widgetResponse.ok) {
+                let errorText = await widgetResponse.text();
+                console.error("Не вдалося оновити віджети:", errorText);
+            }
+
+            alert("Дані успішно збережено!");
 
         }
     </script>

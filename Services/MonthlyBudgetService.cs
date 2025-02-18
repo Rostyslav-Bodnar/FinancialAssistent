@@ -8,10 +8,13 @@ namespace FinancialAssistent.Services
     public class MonthlyBudgetService
     {
         private readonly TransactionService transactionService;
-
-        public MonthlyBudgetService(TransactionService transactionService)
+        private readonly UserInfoService userInfoService;
+        private readonly BalanceInfoService balanceInfoService;
+        public MonthlyBudgetService(TransactionService transactionService, UserInfoService userInfoService, BalanceInfoService balanceInfoService)
         {
             this.transactionService = transactionService;
+            this.userInfoService = userInfoService;
+            this.balanceInfoService = balanceInfoService;
         }
 
 
@@ -22,7 +25,7 @@ namespace FinancialAssistent.Services
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var transactions = transactionService.GetTransactions(firstDayOfMonth, today);
 
-            decimal monthlyBudget = transactionService.GetMonthlyBalance();
+            decimal monthlyBudget = balanceInfoService.GetMonthlyBalance();
             decimal spend = 0;
             decimal left = 0;
 
@@ -30,11 +33,8 @@ namespace FinancialAssistent.Services
             {
                 spend -= transaction.Amount;
             }
-            monthlyBudget = 10000;
+            monthlyBudget = 10000; // грубо задане значення
             left = monthlyBudget - spend;
-            Console.WriteLine(monthlyBudget);
-            Console.WriteLine(left);
-            Console.WriteLine(spend);
 
             return new MonthlyBudgetModel
             {
@@ -52,13 +52,13 @@ namespace FinancialAssistent.Services
                 return Results.BadRequest("Invalid budget data.");
             }
 
-            decimal maxBudget = transactionService.GetTotalBalance();
+            decimal maxBudget = 10000; //balanceInfoService.GetTotalBalance();
             if (model.MonthlyBudget > maxBudget)
             {
                 return Results.BadRequest($"Budget cannot exceed {maxBudget}.");
             }
 
-            var user = transactionService.GetUser();
+            var user = userInfoService.GetUser();
             if (user == null)
             {
                 return Results.Unauthorized();

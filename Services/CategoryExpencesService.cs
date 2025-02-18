@@ -1,4 +1,5 @@
 ﻿using FinancialAssistent.Converters;
+using FinancialAssistent.Transfers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialAssistent.Services
@@ -16,7 +17,7 @@ namespace FinancialAssistent.Services
 
 
         [HttpGet("category")]
-        public JsonResult GetCategoryExpences()
+        public IResult GetCategoryExpences()
         {
             DateTime today = DateTime.UtcNow;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
@@ -32,13 +33,9 @@ namespace FinancialAssistent.Services
                 values.Add(-transaction.Amount);
             }
 
-            var result = new
-            {
-                labels = labels,
-                values = values,
-            };
+            var result = new CategoryExpencesResult(labels, values);
 
-            return new JsonResult(result);
+            return Results.Ok(result);
         }
     }
 }

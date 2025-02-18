@@ -8,16 +8,17 @@ namespace FinancialAssistent.Services
     public class CostLimitsService
     {
         private readonly TransactionService transactionService;
-
-        public CostLimitsService(TransactionService transactionService)
+        private readonly UserInfoService userInfoService;
+        public CostLimitsService(TransactionService transactionService, UserInfoService userInfoService)
         {
             this.transactionService = transactionService;
+            this.userInfoService = userInfoService;
         }
 
         [HttpGet("getLimits")]
         public CostsLimitsModel GetCostsLimits()
         {
-            DateTime today = DateTime.UtcNow;
+            DateTime today = DateTime.UtcNow.ToLocalTime();
             DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek + 1);
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var transactions = transactionService.GetTransactions(firstDayOfMonth, today);
@@ -60,7 +61,7 @@ namespace FinancialAssistent.Services
                 return Results.BadRequest("Invalid budget data.");
             }
 
-            var user = transactionService.GetUser();
+            var user = userInfoService.GetUser();
             if (user == null)
             {
                 return Results.Unauthorized();

@@ -1,4 +1,5 @@
 using FinancialAssistent.Entities;
+using FinancialAssistent.Helpers;
 using FinancialAssistent.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -25,17 +26,22 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<Database>();
 
-
-// Реєстрація EmailSender тільки один раз
-builder.Services.AddTransient<IEmailSender, EmailSender>();
-
 builder.Services.AddHttpClient<MonobankService>(client =>
 {
     client.BaseAddress = new Uri("https://api.monobank.ua/");
 });
 
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<WidgetService>();
+builder.Services.AddScoped<UserInfoService>();
+builder.Services.AddScoped<BalanceInfoService>();
+builder.Services.AddScoped<MonobankUpdater>();
+builder.Services.AddScoped<MonobankBackgroundUpdater>();
+builder.Services.AddScoped<MonthlyBudgetService>();
+builder.Services.AddScoped<CostLimitsService>();
+
+builder.Services.AddScoped<DashboardModelGenerator>();
 
 var app = builder.Build();
 

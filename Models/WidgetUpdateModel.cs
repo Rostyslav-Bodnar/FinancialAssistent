@@ -4,6 +4,5 @@
     {
         public string Name { get; set; }
         public decimal Budget { get; set; }
-        public string UserId { get; set; }
     }
 }

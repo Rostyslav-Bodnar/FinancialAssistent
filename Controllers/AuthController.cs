@@ -1,53 +1,37 @@
-﻿using FinancialAssistent.Models;
-using FinancialAssistent.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using FinancialAssistent.Services;
+using FinancialAssistent.ViewModels;
 
 namespace FinancialAssistent.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
 
-        private readonly WidgetService widgetService;
+        private readonly AuthService authService;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, 
-            WidgetService widgetService)
+        public AuthController(AuthService authService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            this.widgetService = widgetService;
+            this.authService = authService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(AuthViewModel model)
         {
-            var user = new User { UserName = model.registerModel.Name, Email = model.registerModel.Email};
-            var result = await _userManager.CreateAsync(user, model.registerModel.Password);
+            var result = await authService.RegisterUserAsync(model.registerModel);
+
             if (result.Succeeded)
             {
-                var userInfo = new UserInfo { UserId = user.Id };
-
-                // Додаємо UserInfo в базу після успішного створення User
-                var dbContext = HttpContext.RequestServices.GetService<Database>();
-                dbContext.UsersInfo.Add(userInfo);
-                await dbContext.SaveChangesAsync();
-                await widgetService.AddStandartWidgets();
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Dashboard", "Monobank");
+                return RedirectToAction("Dashboard", "FinancialAssistent");
             }
 
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);
-                Console.WriteLine($"Error: {error.Code} - {error.Description}"); // Виводить всі помилки в консоль
+                Console.WriteLine($"Error: {error.Code} - {error.Description}");
             }
 
             return View("Auth", model);
         }
-
 
         [HttpGet]
         public IActionResult Auth()
@@ -58,20 +42,22 @@ namespace FinancialAssistent.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(AuthViewModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.loginModel.Username, model.loginModel.Password, model.loginModel.RememberMe, lockoutOnFailure: false);
+            var result = await authService.LoginUserAsync(model.loginModel);
+
             if (result.Succeeded)
             {
-                return RedirectToAction("Dashboard", "Monobank");
+                return RedirectToAction("Dashboard", "FinancialAssistent");
             }
+
             ModelState.AddModelError("", "Invalid login attempt.");
-            Console.WriteLine($"Error"); // Виводить всі помилки в консоль
+            Console.WriteLine("Login error");
             return View("Auth", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await authService.LogoutUserAsync();
             return RedirectToAction("Auth");
         }
     }
