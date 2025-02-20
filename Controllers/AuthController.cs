@@ -50,7 +50,6 @@ namespace FinancialAssistent.Controllers
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
-            Console.WriteLine("Login error");
             return View("Auth", model);
         }
 

@@ -16,11 +16,11 @@ namespace FinancialAssistent.Infrastructure.Handlers
             this.balanceInfoService = balanceInfoService;
         }
 
-        public Task<MonthlyBudgetModel> Handle(GetMonthlyBudgetCommand request, CancellationToken cancellationToken)
+        public async Task<MonthlyBudgetModel> Handle(GetMonthlyBudgetCommand request, CancellationToken cancellationToken)
         {
             DateTime today = DateTime.UtcNow;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
-            var transactions = transactionService.GetTransactions(firstDayOfMonth, today);
+            var transactions = await transactionService.GetTransactions(firstDayOfMonth, today);
 
             decimal monthlyBudget = balanceInfoService.GetMonthlyBalance();
             decimal spend = 0;
@@ -40,7 +40,7 @@ namespace FinancialAssistent.Infrastructure.Handlers
                 RemainingBudget = left
             };
 
-            return Task.FromResult(result);
+            return result;
         }
     }
 }

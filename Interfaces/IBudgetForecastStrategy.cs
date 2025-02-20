@@ -5,6 +5,6 @@ namespace FinancialAssistent.Interfaces
 {
     public interface IBudgetForecastStrategy
     {
-        BudgetForecastResult Predict(TransactionService transactionService);
+        Task<BudgetForecastResult> Predict(TransactionService transactionService);
     }
 }

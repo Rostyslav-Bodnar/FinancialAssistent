@@ -6,12 +6,12 @@ namespace FinancialAssistent.Strategy
 {
     public class WeeklyForecastStrategy : IBudgetForecastStrategy
     {
-        public BudgetForecastResult Predict(TransactionService transactionService)
+        public async Task<BudgetForecastResult> Predict(TransactionService transactionService)
         {
             DateTime today = DateTime.UtcNow;
             DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek);
             DateTime endOfWeek = startOfWeek.AddDays(6);
-            var transactions = transactionService.GetTransactions(startOfWeek, today);
+            var transactions = await transactionService.GetTransactions(startOfWeek, today);
             decimal totalBalance = 6000; //transactionService.GetTotalBalance();
 
             Dictionary<DayOfWeek, decimal> dailyExpenses = new();

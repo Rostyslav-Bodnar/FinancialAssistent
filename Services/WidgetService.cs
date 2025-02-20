@@ -1,10 +1,8 @@
-﻿using FinancialAssistent.Converters;
-using FinancialAssistent.Entities;
+﻿using FinancialAssistent.Entities;
 using FinancialAssistent.Infrastructure.Commands;
 using FinancialAssistent.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FinancialAssistent.Services
 {

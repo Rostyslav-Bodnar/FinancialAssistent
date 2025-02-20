@@ -19,7 +19,7 @@ namespace FinancialAssistent.Infrastructure.Handlers
             DateTime today = DateTime.UtcNow.ToLocalTime();
             DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek + 1);
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
-            var transactions = transactionService.GetTransactions(firstDayOfMonth, today);
+            var transactions = await transactionService.GetTransactions(firstDayOfMonth, today);
 
             decimal dailySpent = transactions
                 .Where(t => DateTimeOffset.FromUnixTimeSeconds(t.Time).UtcDateTime.Date == today.Date)

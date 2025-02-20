@@ -15,12 +15,12 @@ namespace FinancialAssistent.Infrastructure.Handlers
             this.transactionService = transactionService;
         }
 
-        public Task<CategoryExpencesResult> Handle(GetCategoryExpencesCommand request, CancellationToken cancellationToken)
+        public async Task<CategoryExpencesResult> Handle(GetCategoryExpencesCommand request, CancellationToken cancellationToken)
         {
             DateTime today = DateTime.UtcNow;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
 
-            var transactions = transactionService.GetTransactions(firstDayOfMonth, today);
+            var transactions = await transactionService.GetTransactions(firstDayOfMonth, today);
 
             var categoryExpenses = new Dictionary<string, decimal>();
 
@@ -43,7 +43,7 @@ namespace FinancialAssistent.Infrastructure.Handlers
 
             var result = new CategoryExpencesResult(labels, values);
 
-            return Task.FromResult(result);
+            return result;
         }
     }
 }

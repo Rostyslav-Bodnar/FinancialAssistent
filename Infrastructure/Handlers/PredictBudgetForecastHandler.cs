@@ -23,15 +23,15 @@ namespace FinancialAssistent.Infrastructure.Handlers
             };
         }
 
-        public Task<BudgetForecastResult> Handle(PredictBudgetForecastCommand request, CancellationToken cancellationToken)
+        public async Task<BudgetForecastResult> Handle(PredictBudgetForecastCommand request, CancellationToken cancellationToken)
         {
             if (!_strategies.ContainsKey(request.Type))
             {
                 throw new ArgumentException("Invalid forecast type.");
             }
 
-            var result = _strategies[request.Type].Predict(_transactionService);
-            return Task.FromResult(result);
+            var result = await _strategies[request.Type].Predict(_transactionService);
+            return result;
         }
     }
 }
