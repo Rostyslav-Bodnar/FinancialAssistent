@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinancialAssistent.Entities
 {
     public class UserInfo
     {
         public int Id { get; set; }
-        public decimal Cash { get; set; }
         public decimal MonthlyBudget { get; set; }
         public List<Widgets> Widgets { get; set; }
 

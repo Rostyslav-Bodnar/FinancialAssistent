@@ -5,8 +5,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url("../Media/w13.png") center no-repeat;
     background-size: cover;
+    background: linear-gradient(to bottom, #2e3245, #252836, #1d202d);
 }
 
 /* Контейнер форми */

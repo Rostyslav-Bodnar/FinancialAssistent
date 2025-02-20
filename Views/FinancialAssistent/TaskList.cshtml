@@ -1,1 +1,40 @@
-﻿
+﻿<head>
+    <link rel="stylesheet" href="~/css/taskList.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+</head>
+<body>
+    <div class="taskList-container">
+        <!-- Привітальний блок -->
+        <div class="welcome-container">
+            <h1>Ласкаво просимо до Task List!</h1>
+            <p>Ваш особистий менеджер завдань для продуктивності та успіху 🎯</p>
+        </div>
+
+        <!-- Прогрес -->
+        <div class="progress-container">
+            <h2>Ваш прогрес</h2>
+            <div class="progress-bar">
+                <div class="progress" style="width: 70%;">70%</div>
+            </div>
+        </div>
+
+        <!-- Список завдань -->
+        <div class="tasks-container">
+            <h2>Список завдань</h2>
+            <ul class="task-list">
+                <li class="task completed">✔ Завершити звіт</li>
+                <li class="task in-progress">⏳ Підготувати презентацію</li>
+                <li class="task pending">🔜 Почати новий проект</li>
+            </ul>
+        </div>
+
+        <!-- Останні оновлення -->
+        <div class="updates-container">
+            <h2>Останні оновлення</h2>
+            <p>✅ Ви виконали 3 завдання цього тижня! Продовжуйте в тому ж дусі 🚀</p>
+        </div>
+    </div>
+
+</body>

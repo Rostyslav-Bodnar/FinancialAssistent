@@ -7,7 +7,9 @@ namespace FinancialAssistent.ViewModels
     {
         public User User { get; set; }
         public decimal TotalBalance { get; set; }
-        public decimal? Balance { get; set; }
+
+        public List<BankCardEntity> BankCards { get; set; }
+
         public bool HasCard { get; set; }
         public List<TransactionEntity> Transactions { get; set; }
 

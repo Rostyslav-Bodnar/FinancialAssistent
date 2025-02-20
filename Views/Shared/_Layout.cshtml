@@ -15,14 +15,30 @@
                 <a class="header-button" asp-area="" asp-controller="Home" asp-action="Index">FinancialAssistent</a>
             </div>
             <div class="loginInfo">
-                @if (Context.Session.GetString("Username") != null)
+                @if (User.Identity.IsAuthenticated)
                 {
-                    <p>Вітаємо, @Context.Session.GetString("Username")!</p>
-                    <a href="/Auth/Logout">Вийти</a>
-                }
-                else
-                {
-                    <a href="/Auth/Login">Увійти</a>
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            @User.Identity.Name!
+                        </button>
+                        <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="userDropdown">
+                            @if (Model is FinancialAssistent.ViewModels.DashboardViewModel)
+                            {
+                                <li><p class="dropdown-item custom-dropdown-item" href="#">Balance: ₴@Model.TotalBalance</p></li>
+                                <li><p class="dropdown-item custom-dropdown-item" href="#">E-mail: @Model.User.Email</p></li>
+                                <li>
+                                    <form asp-controller="FinancialAssistent" asp-action="ProfileSettings" method="post">
+                                        <button type="submit" class="dropdown-item custom-dropdown-item btn btn-link">Settings</button>
+                                    </form>
+                                </li>
+                            }
+                            <li>
+                                <form asp-controller="Auth" asp-action="Logout" method="post">
+                                    <button type="submit" class="dropdown-item custom-dropdown-item btn btn-link">Log out</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 }
             </div>
         </nav>
@@ -33,7 +49,16 @@
                 <div class="menu-options">
                     <ul class="menu-list">
                         <li class="option">
-                            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a asp-area="" asp-controller="FinancialAssistent" asp-action="Dashboard">Dashboard</a>
+                        </li>
+                        <li class="option">
+                            <a asp-area="" asp-controller="FinancialAssistent" asp-action="TaskList">Task List</a>
+                        </li>
+                        <li class="option">
+                            <a asp-area="" asp-controller="FinancialAssistent" asp-action="Transaction">Transaction</a>
+                        </li>
+                        <li class="option">
+                            <a asp-area="" asp-controller="FinancialAssistent" asp-action="ProfileSettings">Profile</a>
                         </li>
                         <li class="option">
                             <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

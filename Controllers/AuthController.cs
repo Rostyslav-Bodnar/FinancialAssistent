@@ -6,7 +6,6 @@ namespace FinancialAssistent.Controllers
 {
     public class AuthController : Controller
     {
-
         private readonly AuthService authService;
 
         public AuthController(AuthService authService)
@@ -21,7 +20,8 @@ namespace FinancialAssistent.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Dashboard", "FinancialAssistent");
+                Console.WriteLine("Result Suceeded");
+                return RedirectToAction("AddMonobankCard", "Monobank");
             }
 
             foreach (var error in result.Errors)
@@ -29,7 +29,7 @@ namespace FinancialAssistent.Controllers
                 ModelState.AddModelError("", error.Description);
                 Console.WriteLine($"Error: {error.Code} - {error.Description}");
             }
-
+            Console.WriteLine("Result is Not Suceeded");
             return View("Auth", model);
         }
 
@@ -46,7 +46,7 @@ namespace FinancialAssistent.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Dashboard", "FinancialAssistent");
+                return RedirectToAction("AddMonobankCard", "Monobank");
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");

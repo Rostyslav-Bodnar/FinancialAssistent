@@ -1,15 +1,25 @@
 using FinancialAssistent.Entities;
 using FinancialAssistent.Helpers;
 using FinancialAssistent.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".MyApp.Session";
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Database>(options =>
@@ -31,6 +41,9 @@ builder.Services.AddHttpClient<MonobankService>(client =>
     client.BaseAddress = new Uri("https://api.monobank.ua/");
 });
 
+builder.Services.AddControllers();
+
+builder.Services.AddScoped<BankCardService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<WidgetService>();
@@ -40,8 +53,15 @@ builder.Services.AddScoped<MonobankUpdater>();
 builder.Services.AddScoped<MonobankBackgroundUpdater>();
 builder.Services.AddScoped<MonthlyBudgetService>();
 builder.Services.AddScoped<CostLimitsService>();
+builder.Services.AddScoped<MonobankHttpClient>();
+builder.Services.AddScoped<MonobankService>();
 
 builder.Services.AddScoped<DashboardModelGenerator>();
+builder.Services.AddScoped<ProfileInfoModelGenerator>();
+
+builder.Services.AddScoped<MonobankUpdater>();
+builder.Services.AddHostedService<MonobankBackgroundUpdater>();
+
 
 var app = builder.Build();
 
@@ -63,13 +83,6 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "monobank",
-    pattern: "monobank/transactions",
-    defaults: new { controller = "Monobank", action = "Transactions" });
-
-
-//app.MapIdentityApi<User>();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

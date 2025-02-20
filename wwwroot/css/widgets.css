@@ -59,7 +59,6 @@
     border: none;
     overflow: hidden;
     margin: 5px 0px 5px 0px;
-    padding: 0px 5px 0px 5px;
     justify-self: center;
     justify-content: start;
 }
@@ -263,6 +262,10 @@
     z-index: 999;
 }
 
+#transactionDetailsSettings {
+    top: 10%;
+}
+
 .popup-form-header {
     text-align: center;
     font-size: 22px;
@@ -383,7 +386,296 @@
     padding: 0px;
 }
 
-#w2 {
+#transaction-container {
     height: 400px;
     margin-top: 0px;
 }
+
+.transaction-history {
+    width: 100%;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+    background: #1c1f2b;
+    border-radius: 10px;
+}
+
+.transaction-period {
+    display: flex;
+    color: white;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.period-btn {
+    background: none;
+    color: white;
+    border: none;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    height: 60%;
+}
+    .period-btn:hover {
+        background: linear-gradient(to bottom, #2e3245, #252836, #1d202d);
+    }
+
+.period-date {
+    font-size: 18px;
+}
+
+.widget-header {
+    font-size: 20px;
+    color: white;
+    margin: 0px;
+    padding: 10px 0px 5px 10px;
+}
+
+.comparison-values {
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    padding: 0;
+    margin: 0;
+    color: green;
+}
+
+.negative-value {
+    padding: 0px 10px 0px 0px;
+    margin: 0px;
+    color: red;
+}
+
+.positive-value {
+    padding: 0px 0px 0px 10px;
+    margin: 0px;
+}
+
+.transaction-list {
+    display: flex;
+    flex-direction: column; /* Змінюємо напрямок на вертикальний */
+    overflow-y: auto; /* Дозволяємо вертикальний скрол */
+    gap: 10px; /* Відстань між елементами */
+    padding: 10px;
+    height: 100%; /* Висота контейнера */
+    max-height: 240px; /* Максимальна висота для списку транзакцій */
+}
+
+.transaction {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px;
+    background: #2e3245;
+    border: 1px solid #252836;
+}
+
+    .transaction:hover {
+        cursor: pointer;
+    }
+
+.slider-btn {
+    background: none;
+    border: none;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    position: absolute;
+    z-index: 1;
+}
+
+.prev-btn {
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    top: 10px;
+}
+
+.next-btn {
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    bottom: 10px;
+}
+.transaction-info {
+    margin: 0px;
+}
+
+.transaction-name {
+    font-size: 14px;
+    color: white;
+    margin: 0px;
+}
+
+.info {
+    margin: 0px;
+    display: flex;
+}
+
+.transaction-date {
+    color: white;
+    margin: 0px;
+}
+
+.transaction-category {
+    color: green;
+    margin: 0px;
+}
+
+.transaction-cost {
+    margin: 0px;
+    color: red;
+}
+
+.relation-bar-container {
+    width: 95%;
+    height: 2px;
+    background-color: red;
+    border-radius: 0px;
+    border: none;
+    overflow: hidden;
+    justify-self: center;
+    justify-content: start;
+}
+
+.relation-bar {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.5s ease-in-out;
+}
+
+
+
+/* Стиль контейнера */
+.transaction-details {
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(to bottom, #2e3245, #1c1f2b);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
+    color: white;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Заголовок */
+.details-header {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Стиль кожного рядка */
+.detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+}
+
+    /* Ховер-ефект */
+    .detail:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+/* Назва поля */
+.label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ccc;
+}
+
+/* Значення */
+.value {
+    font-size: 16px;
+    color: white;
+}
+
+/* Колір для суми */
+.amount.negative {
+    color: red;
+}
+
+.amount.positive {
+    color: #4CAF50;
+}
+
+
+/* Контейнер форми */
+.transaction-form {
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(to bottom, #2e3245, #1c1f2b);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
+    color: white;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Заголовок */
+.form-header {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Група елемента форми */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ccc;
+    margin-bottom: 5px;
+}
+
+/* Інпути та селект */
+input, select, textarea {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background: #252836;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+    /* Підсвічування при фокусі */
+    input:focus, select:focus, textarea:focus {
+        background: #333648;
+        box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.3);
+    }
+
+/* Кнопка */
+.submit-btn {
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+    /* Ефект натискання */
+    .submit-btn:hover {
+        background: #45a049;
+    }
+
+    .submit-btn:active {
+        background: #3e8e41;
+    }

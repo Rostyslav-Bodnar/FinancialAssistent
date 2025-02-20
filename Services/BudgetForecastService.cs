@@ -1,5 +1,5 @@
-﻿using FinancialAssistent.Interfaces;
-using FinancialAssistent.Strategy;
+﻿using FinancialAssistent.Infrastructure.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialAssistent.Services
@@ -8,30 +8,25 @@ namespace FinancialAssistent.Services
     [ApiController]
     public class BudgetForecastService
     {
-        private readonly TransactionService transactionService;
+        private readonly IMediator mediator;
 
-        private readonly IDictionary<string, IBudgetForecastStrategy> _strategies;
-
-        public BudgetForecastService(TransactionService transactionProvider)
+        public BudgetForecastService(IMediator mediator)
         {
-            transactionService = transactionProvider;
-            _strategies = new Dictionary<string, IBudgetForecastStrategy>
-        {
-            { "monthly", new MonthlyForecastStrategy() },
-            { "weekly", new WeeklyForecastStrategy() }
-        };
+            this.mediator = mediator;
         }
 
         [HttpGet("{type}")]
-        public IResult Predict(string type)
+        public async Task<IResult> Predict(string type)
         {
-            if (!_strategies.ContainsKey(type))
+            try
             {
-                return Results.BadRequest("Invalid forecast type.");
+                var result = await mediator.Send(new PredictBudgetForecastCommand(type));
+                return Results.Ok(result);
             }
-
-            var result = _strategies[type].Predict(transactionService);
-            return Results.Ok(result);
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
         }
     }
 }

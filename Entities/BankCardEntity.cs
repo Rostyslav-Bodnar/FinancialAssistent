@@ -18,5 +18,7 @@ namespace FinancialAssistent.Entities
         public decimal Balance { get; set; } // Останній відомий баланс
 
         public List<TransactionEntity> Transactions { get; set; } = new List<TransactionEntity>();
+
+        public string MaskedPan { get; set; }
     }
 }

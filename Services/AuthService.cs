@@ -1,36 +1,25 @@
 ﻿using FinancialAssistent.Entities;
+using FinancialAssistent.Infrastructure.Commands;
 using FinancialAssistent.Models;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace FinancialAssistent.Services
 {
     public class AuthService
     {
-        private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
-        private readonly Database dbContext;
+        private readonly IMediator mediator;
 
-        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, Database dbContext)
+        public AuthService(IMediator mediator, SignInManager<User> signInManager)
         {
-            this.userManager = userManager;
+            this.mediator = mediator;
             this.signInManager = signInManager;
-            this.dbContext = dbContext;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(RegisterModel model)
         {
-            var user = new User { UserName = model.Name, Email = model.Email };
-            var result = await userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
-            {
-                var userInfo = new UserInfo { UserId = user.Id };
-                dbContext.UsersInfo.Add(userInfo);
-                await dbContext.SaveChangesAsync();
-                await signInManager.SignInAsync(user, isPersistent: false);
-            }
-
-            return result;
+            return await mediator.Send(new RegisterUserCommand(model));
         }
 
         public async Task<SignInResult> LoginUserAsync(LoginModel model)

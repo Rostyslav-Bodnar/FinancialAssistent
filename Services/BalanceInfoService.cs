@@ -16,8 +16,8 @@ namespace FinancialAssistent.Services
         public decimal GetTotalBalance()
         {
             var userId = userInfoService.GetUserId();
-            var bankCard = dbContext.BankCards.FirstOrDefault(c => c.UserId == userId);
-            decimal totalBalance = (bankCard?.Balance ?? 0) + (bankCard?.User?.UserInfo.Cash ?? 0);
+            var bankCards = dbContext.BankCards.Where(c => c.UserId == userId).ToList();
+            decimal totalBalance = bankCards.Sum(c => c.Balance);
 
             return totalBalance;
         }

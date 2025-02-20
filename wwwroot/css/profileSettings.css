@@ -1,0 +1,118 @@
+﻿body {
+    background: #12131a;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.user-profile {
+    width: 80%;
+    max-width: 800px;
+    background: #1c1f2b;
+    padding: 30px;
+    border-radius: 15px;
+    margin-left: 400px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.profile-header {
+    text-align: center;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+}
+
+    .profile-header h2 {
+        font-size: 26px;
+        margin: 0;
+    }
+
+.email {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.balance-info {
+    text-align: center;
+    font-size: 22px;
+    margin: 20px 0;
+}
+
+.cards-container {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.cards-list {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.bank-card {
+    background: linear-gradient(135deg, #2a2d3e, #1f212e);
+    padding: 15px;
+    border-radius: 12px;
+    width: 220px;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+    .bank-card:hover {
+        transform: scale(1.05);
+    }
+
+.card-number {
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+.card-balance {
+    font-size: 24px;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+button {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+    display: block;
+    margin: 10px auto;
+}
+
+    button:hover {
+        transform: scale(1.05);
+        background: linear-gradient(135deg, #ff4b2b, #ff416c);
+    }
+
+.update-username {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}

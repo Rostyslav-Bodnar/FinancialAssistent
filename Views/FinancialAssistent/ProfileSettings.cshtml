@@ -1,1 +1,37 @@
-﻿
+﻿@model FinancialAssistent.ViewModels.ProfileInfoViewModel
+<head>
+    <link rel="stylesheet" href="~/css/profileSettings.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+</head>
+<body>
+    <div class="user-profile">
+        <div class="profile-header">
+            <h2 class="username">Username: <span id="username">@Model.User.UserName</span></h2>
+            <p class="email">Email: <span id="user-email">@Model.User.Email</span></p>
+        </div>
+
+        <div class="balance-info">
+            <h3>Total Balance: <span id="total-balance">₴@Model.TotalBalance</span></h3>
+        </div>
+
+        <div class="cards-container">
+            <h3>Bank cards</h3>
+            <div class="cards-list">
+                @foreach (var card in Model.bankCardEntities)
+                {
+                    <div class="bank-card">
+                        <p class="card-number">@card.MaskedPan</p>
+                        <p class="card-balance">₴@card.Balance</p>
+                        <button class="delete-card">Delete</button>
+                    </div>
+                }
+            </div>
+            <button class="add-card">Add Card</button>
+        </div>
+
+    </div>
+
+
+</body>

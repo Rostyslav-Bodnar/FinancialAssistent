@@ -18,7 +18,7 @@ namespace FinancialAssistent.Controllers
         public IActionResult Index()
         {
             var user = _userManager.GetUserAsync(User);
-            if (user != null) return RedirectToAction("Dashboard", "FinancialAssistent");
+            if (user != null) return RedirectToAction("AddMonobankCard", "Monobank");
             return View();
         }
 

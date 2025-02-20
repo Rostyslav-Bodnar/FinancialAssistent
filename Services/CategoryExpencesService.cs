@@ -1,5 +1,5 @@
-﻿using FinancialAssistent.Converters;
-using FinancialAssistent.Transfers;
+﻿using FinancialAssistent.Infrastructure.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialAssistent.Services
@@ -8,34 +8,19 @@ namespace FinancialAssistent.Services
     [ApiController]
     public class CategoryExpencesService
     {
-        private readonly TransactionService transactionService;
+        private readonly IMediator mediator;
 
-        public CategoryExpencesService(TransactionService transactionService)
+        public CategoryExpencesService(IMediator mediator)
         {
-            this.transactionService = transactionService;
+            this.mediator = mediator;
         }
 
 
         [HttpGet("category")]
-        public IResult GetCategoryExpences()
+        public async Task<IActionResult> GetCategoryExpences()
         {
-            DateTime today = DateTime.UtcNow;
-            DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
-
-            var transactions = transactionService.GetTransactions(firstDayOfMonth, today);
-
-            List<string> labels = new List<string>();
-            List<decimal> values = new List<decimal>();
-
-            foreach (var transaction in transactions)
-            {
-                labels.Add(TransactionCategoryConverter.GetCategory(transaction.Mcc));
-                values.Add(-transaction.Amount);
-            }
-
-            var result = new CategoryExpencesResult(labels, values);
-
-            return Results.Ok(result);
+            var result = await mediator.Send(new GetCategoryExpencesCommand());
+            return new JsonResult(result);
         }
     }
 }

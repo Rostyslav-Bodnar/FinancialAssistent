@@ -15,6 +15,10 @@ namespace FinancialAssistent.Models
 
         [JsonProperty("currencyCode")]
         public int CurrencyCode { get; set; }
+
+        [JsonProperty("maskedPan")]
+        public List<string> MaskedPan { get; set; }
+
     }
 
 }

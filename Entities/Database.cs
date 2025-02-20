@@ -46,6 +46,47 @@ namespace FinancialAssistent.Entities
                 .WithMany()
                 .HasForeignKey(w => w.IconID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<BankCardEntity>()
+        .Property(b => b.Balance)
+        .HasPrecision(18, 2);
+
+            modelBuilder.Entity<TransactionEntity>()
+                .Property(t => t.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<TransactionEntity>()
+                .Property(t => t.OperationAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<TransactionEntity>()
+                .Property(t => t.BalanceAfterTransaction)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<TransactionEntity>()
+                .Property(t => t.CashbackAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<UserInfo>()
+                .Property(u => u.DailyCostsLimits)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<UserInfo>()
+                .Property(u => u.WeeklyCostsLimits)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<UserInfo>()
+                .Property(u => u.MonthlyBudget)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Widgets>()
+                .Property(w => w.Budget)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Widgets>()
+                .Property(w => w.Expenses)
+                .HasPrecision(18, 2);
         }
 
 

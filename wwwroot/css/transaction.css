@@ -1,0 +1,67 @@
+﻿.transaction-container {
+    margin-left: 200px;
+    margin-top: 50px;
+}
+
+.transaction-widget {
+
+}
+
+.transaction-history {
+    width: 400px;
+    height: 600px;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+    background: #1c1f2b;
+    border-radius: 10px;
+}
+
+    .widget-header {
+        font-size: 20px;
+        color: white;
+        margin: 0px;
+        padding: 10px 0px 5px 10px;
+    }
+
+    .transaction-list {
+        width: 100%;
+        padding: 10px;
+    }
+
+        .transaction {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            padding: 10px;
+            background: #2e3245;
+            border: 1px solid #252836;
+        }
+
+            .transaction-name {
+                margin: 0px;
+            }
+                
+                .name {
+                    font-size: 14px;
+                    color: white;
+                    margin: 0px;
+                }
+
+                    .info {
+                        margin: 0px;
+                        display: flex;
+                    }
+
+                        .transaction-date {
+                            color: white;
+                            margin: 0px;
+                        }
+
+                        .transaction-category {
+                            color: green;
+                            margin: 0px;
+                        }
+            
+            .transaction-cost {
+                margin: 0px;
+                color: red;
+            }

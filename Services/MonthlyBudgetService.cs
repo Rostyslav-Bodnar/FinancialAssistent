@@ -1,4 +1,6 @@
-﻿using FinancialAssistent.Models;
+﻿using FinancialAssistent.Infrastructure.Commands;
+using FinancialAssistent.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialAssistent.Services
@@ -7,67 +9,29 @@ namespace FinancialAssistent.Services
     [ApiController]
     public class MonthlyBudgetService
     {
-        private readonly TransactionService transactionService;
-        private readonly UserInfoService userInfoService;
-        private readonly BalanceInfoService balanceInfoService;
-        public MonthlyBudgetService(TransactionService transactionService, UserInfoService userInfoService, BalanceInfoService balanceInfoService)
+        private readonly IMediator mediator;
+
+        public MonthlyBudgetService(IMediator mediator)
         {
-            this.transactionService = transactionService;
-            this.userInfoService = userInfoService;
-            this.balanceInfoService = balanceInfoService;
+            this.mediator = mediator;
         }
 
-
         [HttpGet("budget")]
-        public MonthlyBudgetModel GetMonthlyBudgetInfo()
+        public async Task<MonthlyBudgetModel> GetMonthlyBudgetInfo()
         {
-            DateTime today = DateTime.UtcNow;
-            DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
-            var transactions = transactionService.GetTransactions(firstDayOfMonth, today);
-
-            decimal monthlyBudget = balanceInfoService.GetMonthlyBalance();
-            decimal spend = 0;
-            decimal left = 0;
-
-            foreach(var transaction in transactions)
-            {
-                spend -= transaction.Amount;
-            }
-            monthlyBudget = 10000; // грубо задане значення
-            left = monthlyBudget - spend;
-
-            return new MonthlyBudgetModel
-            {
-                MonthlyBudget = monthlyBudget,
-                SpendedBudget = spend,
-                RemainingBudget = left
-            };
+            var result = await mediator.Send(new GetMonthlyBudgetCommand());
+            return result;
         }
 
         [HttpPost("setBudget")]
         public async Task<IResult> SetMonthlyBudget([FromBody] MonthlyBudgetModel model)
         {
-            if (model == null)
+            if(model == null)
             {
                 return Results.BadRequest("Invalid budget data.");
             }
 
-            decimal maxBudget = 10000; //balanceInfoService.GetTotalBalance();
-            if (model.MonthlyBudget > maxBudget)
-            {
-                return Results.BadRequest($"Budget cannot exceed {maxBudget}.");
-            }
-
-            var user = userInfoService.GetUser();
-            if (user == null)
-            {
-                return Results.Unauthorized();
-            }
-
-            user.UserInfo.MonthlyBudget = model.MonthlyBudget;
-            await transactionService._context.SaveChangesAsync();
-
-            return Results.Ok(new { message = "Monthly budget updated successfully", budget = user.UserInfo.MonthlyBudget });
+            return await mediator.Send(new SetMonthlyBudgetCommand(model));
         }
 
 
