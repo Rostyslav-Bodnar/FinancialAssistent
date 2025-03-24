@@ -57,3 +57,7 @@ A home page of widgets with info about bank card.
 
 ![Home Page](https://github.com/user-attachments/assets/5aebfdc8-6713-4728-b092-b6a6884442e5)
 
+
+
+## P.S.
+The data in the screenshots are roughly defined numbers in the code to test the correct calculation of some functions
