@@ -23,7 +23,8 @@
 - **Entity Framework**  
 - **MediatR**  
 - **Monobank API**  
-- **.NET Identity**  
+- **.NET Identity**
+- **Logging**
 
 🔹 **Frontend**:  
 - **JavaScript**  
